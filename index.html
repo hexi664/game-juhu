@@ -693,7 +693,7 @@
                     <div class="game-info">
                         <h3 class="game-title">Love Tester</h3>
                         <p class="game-description">Test the love compatibility between you and your crush. Enter two names and see your love score!</p>
-                        <a href="#" class="play-button" onclick="openGameModal('Love Tester', 'Enter two names and press the button to see your love compatibility score! A fun casual game.', 'https://www.onlinegames.io/games/2021/3/love-tester/index.html')">Play Now</a>
+                        <a href="#" class="play-button" onclick="openGameModal('Love Tester', 'Enter two names and press the button to see your love compatibility score! A fun casual game.', 'https://www.crazygames.com/game/love-tester')">Play Now</a>
                     </div>
                 </div>
             </div>
@@ -806,11 +806,14 @@
             gameIframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
             
             // 根据URL类型设置不同的sandbox属性
-            if (gameUrl.startsWith('http')) {
-                // 外部URL使用更严格的sandbox
-                gameIframe.setAttribute('sandbox', 'allow-scripts allow-popups allow-forms');
+            if (gameUrl.includes('onlinegames.io')) {
+                // onlinegames.io需要更多权限
+                gameIframe.removeAttribute('sandbox'); // 移除所有沙箱限制
+            } else if (gameUrl.startsWith('http')) {
+                // 其他外部URL使用较少限制的sandbox
+                gameIframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms allow-modals allow-orientation-lock');
             } else {
-                // 本地游戏需要same-origin权限
+                // 本地游戏
                 gameIframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms');
             }
             
@@ -821,8 +824,29 @@
             
             // 处理加载错误
             gameIframe.onerror = function() {
-                gameLoading.innerHTML = '<p>加载失败，请刷新页面重试</p>';
+                console.error('游戏加载失败:', gameUrl);
+                gameLoading.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <p>游戏加载失败</p>
+                        <p>可能原因：</p>
+                        <ul style="text-align: left; display: inline-block;">
+                            <li>网络连接问题</li>
+                            <li>游戏源站点限制</li>
+                            <li>浏览器安全设置</li>
+                        </ul>
+                        <button onclick="retryLoadGame('${gameUrl}')" style="margin-top: 15px; padding: 8px 16px; background: #0071e3; color: white; border: none; border-radius: 20px; cursor: pointer;">重试</button>
+                        <button onclick="closeGameModal()" style="margin-top: 15px; margin-left: 10px; padding: 8px 16px; background: #666; color: white; border: none; border-radius: 20px; cursor: pointer;">关闭</button>
+                    </div>
+                `;
             };
+            
+            // 添加超时处理
+            var loadTimeout = setTimeout(function() {
+                if (gameLoading.style.display !== 'none') {
+                    console.warn('游戏加载超时:', gameUrl);
+                    gameLoading.innerHTML += '<p>加载时间较长，请耐心等待...</p>';
+                }
+            }, 8000);
             
             // Show modal with animation
             var modal = document.getElementById('gameModal');
@@ -1124,6 +1148,25 @@
                 document.head.appendChild(gameScript);
             });
         });
+        
+        // 重试加载游戏
+        function retryLoadGame(gameUrl) {
+            var gameIframe = document.getElementById('gameIframe');
+            var gameLoading = document.getElementById('gameLoading');
+            
+            // 重置加载状态
+            gameLoading.innerHTML = `
+                <div class="loading-spinner"></div>
+                <p>正在重新加载游戏...</p>
+            `;
+            gameLoading.style.display = 'flex';
+            
+            // 重新加载iframe
+            gameIframe.src = '';
+            setTimeout(function() {
+                gameIframe.src = gameUrl;
+            }, 500);
+        }
     </script>
 </body>
 </html> 
