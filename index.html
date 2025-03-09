@@ -807,10 +807,10 @@
             
             // 根据URL类型设置不同的sandbox属性
             if (gameUrl.startsWith('http')) {
-                // 外部URL需要更严格的sandbox
+                // 外部URL使用更严格的sandbox
                 gameIframe.setAttribute('sandbox', 'allow-scripts allow-popups allow-forms');
             } else {
-                // 本地游戏允许同源
+                // 本地游戏需要same-origin权限
                 gameIframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms');
             }
             
