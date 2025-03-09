@@ -1,0 +1,3 @@
+/games/* /games/:splat 200
+/game-monster/* /game-monster/:splat 200
+/* /index.html 200 

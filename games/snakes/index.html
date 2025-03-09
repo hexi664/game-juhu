@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贪吃蛇游戏</title>
+    <link rel="stylesheet" href="snakes.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 10px;
+        }
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+            font-size: 24px;
+        }
+        .controls {
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .back-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #ffeeee;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        /* 在iframe中时隐藏返回按钮 */
+        .in-iframe .back-button {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>贪吃蛇游戏</h1>
+        
+        <div id="error-container" class="error-message"></div>
+        
+        <div id="game">
+            <!-- 游戏将在这里加载 -->
+        </div>
+        
+        <div class="controls">
+            <p>使用键盘方向键控制蛇的移动</p>
+        </div>
+        
+        <a href="../../index.html" class="back-button">返回游戏列表</a>
+    </div>
+
+    <script>
+        // 错误处理函数
+        window.onerror = function(message, source, lineno, colno, error) {
+            var errorContainer = document.getElementById('error-container');
+            if (errorContainer) {
+                errorContainer.style.display = 'block';
+                errorContainer.innerHTML = '<p>游戏加载错误: ' + message + '</p>';
+                console.error('游戏错误:', message, source, lineno, colno, error);
+            }
+            return true; // 阻止默认错误处理
+        };
+        
+        // 检测是否在iframe中运行
+        function inIframe() {
+            try {
+                return window.self !== window.top;
+            } catch (e) {
+                return true;
+            }
+        }
+        
+        // 如果在iframe中运行，添加特殊类
+        if (inIframe()) {
+            document.body.classList.add('in-iframe');
+        }
+    </script>
+    <script src="snakes.js"></script>
+    <script>
+        // 游戏初始化代码
+        window.onload = function() {
+            try {
+                console.log('页面加载完成，初始化游戏...');
+                var game = new Snakes();
+                console.log('游戏初始化成功');
+                
+                // 如果在iframe中，确保游戏获得焦点
+                if (inIframe()) {
+                    window.focus();
+                }
+            } catch (error) {
+                console.error('游戏初始化失败:', error);
+                var errorContainer = document.getElementById('error-container');
+                if (errorContainer) {
+                    errorContainer.style.display = 'block';
+                    errorContainer.innerHTML = '<p>游戏初始化失败: ' + error.message + '</p>';
+                }
+            }
+        };
+    </script>
+</body>
+</html> 

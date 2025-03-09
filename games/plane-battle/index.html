@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>飞机大战 - Game Hub</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #121212;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow: hidden;
+        }
+        
+        #game-container {
+            position: relative;
+            width: 400px;
+            height: 600px;
+            background-color: #000;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+        }
+        
+        #game-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 10;
+        }
+        
+        #game-over-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 10;
+        }
+        
+        .title {
+            color: #fff;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0, 120, 255, 0.8);
+        }
+        
+        .subtitle {
+            color: #aaa;
+            font-size: 18px;
+            margin-bottom: 30px;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        .button {
+            background-color: #0071e3;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .button:hover {
+            background-color: #0077ed;
+            transform: translateY(-2px);
+        }
+        
+        #score-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #fff;
+            font-size: 20px;
+            z-index: 5;
+        }
+        
+        #health-display {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #fff;
+            font-size: 20px;
+            z-index: 5;
+        }
+        
+        #mobile-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: none;
+            justify-content: space-around;
+            z-index: 5;
+        }
+        
+        .control-button {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        @media (max-width: 500px) {
+            #game-container {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+            }
+            
+            #mobile-controls {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        
+        <div id="score-display">分数: 0</div>
+        <div id="health-display">生命: 3</div>
+        
+        <div id="start-screen">
+            <h1 class="title">飞机大战</h1>
+            <p class="subtitle">控制飞机躲避敌人，收集道具，尽可能获得高分！</p>
+            <button id="start-button" class="button">开始游戏</button>
+        </div>
+        
+        <div id="game-over-screen">
+            <h1 class="title">游戏结束</h1>
+            <p id="final-score" class="subtitle">你的得分: 0</p>
+            <button id="restart-button" class="button">再来一次</button>
+        </div>
+        
+        <div id="mobile-controls">
+            <button id="left-button" class="control-button">←</button>
+            <button id="fire-button" class="control-button">🔥</button>
+            <button id="right-button" class="control-button">→</button>
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html> 

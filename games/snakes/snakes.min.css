@@ -1,0 +1,22 @@
+.game-canvas {
+    border: 1px solid #333;
+    background-color: black;
+    display: block;
+    margin: 0 auto;
+}
+
+.score-display {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+}
+
+.score-display p {
+    margin: 5px 0;
+}
+
+#score, #high-score {
+    font-weight: bold;
+    color: #4CAF50;
+} 
