@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-J2S2NR7VKG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-J2S2NR7VKG');
+    </script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Play the best free HTML5 games online. Our curated collection includes action, puzzle, racing and adventure games for all ages.">
@@ -1166,6 +1176,23 @@
             setTimeout(function() {
                 gameIframe.src = gameUrl;
             }, 500);
+        }
+        
+        // 百度统计事件跟踪
+        function trackGameClick(gameTitle) {
+            // 百度统计
+            if (window._hmt) {
+                _hmt.push(['_trackEvent', '游戏', '点击', gameTitle]);
+            }
+            
+            // 谷歌统计
+            if (window.gtag) {
+                gtag('event', 'game_click', {
+                    'event_category': '游戏',
+                    'event_label': gameTitle,
+                    'value': 1
+                });
+            }
         }
     </script>
 </body>
