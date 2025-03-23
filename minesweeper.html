@@ -202,7 +202,48 @@
             border-top: 1px solid rgba(0,0,0,0.1);
         }
         
-        /* Responsive Design */
+        /* Mobile Controls Overlay - 新增移动端控制区域 */
+        .mobile-controls {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            padding: 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .mobile-controls p {
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .mobile-button {
+            display: inline-block;
+            padding: 10px 16px;
+            margin: 0 5px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            min-width: 80px;
+            min-height: 44px;
+        }
+        
+        .mobile-button.flag-mode {
+            background-color: #e74c3c;
+        }
+        
+        /* Responsive Design - 更新移动端适配 */
         @media (max-width: 768px) {
             .page-title {
                 font-size: 1rem;
@@ -220,15 +261,57 @@
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
+            
+            /* 在移动设备上显示控制区域 */
+            .mobile-controls {
+                display: block;
+            }
+            
+            /* 为移动控制预留底部空间 */
+            main {
+                padding-bottom: 70px;
+            }
         }
         
         @media (max-width: 480px) {
             .game-frame {
-                height: 500px;
+                height: 680px; /* 将游戏区域高度增加到680px */
             }
             
             .rule-section li {
                 margin-bottom: 0.5rem;
+            }
+            
+            .mobile-button {
+                padding: 8px 12px;
+                font-size: 13px;
+                min-width: 70px;
+            }
+            
+            .game-intro p {
+                font-size: 0.9rem;
+                white-space: nowrap; /* 限制文本为单行 */
+                overflow: hidden; /* 隐藏超出部分 */
+                text-overflow: ellipsis; /* 显示省略号 */
+            }
+            
+            /* 优化小屏幕布局 */
+            .game-wrapper {
+                margin: 0.5rem 0;
+            }
+            
+            /* 减小间距和padding以提供更多可用空间 */
+            .game-rules {
+                padding: 1rem;
+            }
+            
+            .game-rules h2 {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+            }
+            
+            .rule-section h3 {
+                font-size: 1rem;
             }
         }
     </style>
@@ -295,6 +378,13 @@
             </section>
         </main>
         
+        <!-- 新增移动端控制区域 -->
+        <div id="mobileControls" class="mobile-controls">
+            <p>选择操作模式:</p>
+            <button id="revelButton" class="mobile-button">点击模式</button>
+            <button id="flagButton" class="mobile-button">标旗模式</button>
+        </div>
+        
         <footer>
             <p>&copy; 2025 Game Hub | All games are for entertainment purposes only</p>
         </footer>
@@ -310,6 +400,58 @@
             
             // Initial game height adjustment
             adjustGameHeight();
+            
+            // 移动端控制逻辑
+            let isFlagMode = false;
+            const revelButton = document.getElementById('revelButton');
+            const flagButton = document.getElementById('flagButton');
+            
+            revelButton.addEventListener('click', function() {
+                isFlagMode = false;
+                revelButton.classList.add('active');
+                flagButton.classList.remove('flag-mode');
+                flagButton.classList.remove('active');
+                updateGameMode();
+            });
+            
+            flagButton.addEventListener('click', function() {
+                isFlagMode = true;
+                flagButton.classList.add('flag-mode');
+                flagButton.classList.add('active');
+                revelButton.classList.remove('active');
+                updateGameMode();
+            });
+            
+            // 默认设置为点击模式
+            revelButton.classList.add('active');
+            
+            // 更新游戏模式
+            function updateGameMode() {
+                try {
+                    const iframeWindow = document.getElementById('gameFrame').contentWindow;
+                    if (iframeWindow && iframeWindow.postMessage) {
+                        iframeWindow.postMessage({
+                            action: 'setMode',
+                            flagMode: isFlagMode
+                        }, '*');
+                    }
+                } catch(e) {
+                    console.log('无法向游戏iframe发送消息', e);
+                }
+            }
+            
+            // 移动设备检测
+            function isMobileDevice() {
+                return (window.innerWidth <= 768) || 
+                       ('ontouchstart' in window) || 
+                       (navigator.maxTouchPoints > 0) || 
+                       (navigator.msMaxTouchPoints > 0);
+            }
+            
+            // 处理方向变化
+            window.addEventListener('orientationchange', function() {
+                setTimeout(adjustGameHeight, 300);
+            });
             
             // Handle iframe load completion
             document.getElementById('gameFrame').onload = function() {
@@ -329,28 +471,279 @@
                         }
                         table {
                             margin: 0 auto !important;
+                            transform-origin: top center !important;
                         }
                         td {
                             padding: 0 !important;
+                            min-width: 28px !important; /* 移动端更易点击 */
+                            min-height: 28px !important;
+                            font-size: 16px !important; /* 增大字体 */
                         }
                         #game-board, .game-board {
                             margin: 0 auto !important;
                             max-width: 100% !important;
+                            transform-origin: top center !important;
                         }
                         .container {
                             max-width: 100% !important;
-                            padding: 10px !important;
+                            padding: 5px !important; /* 减少内边距腾出空间 */
                             margin: 0 auto !important;
+                            overflow-x: auto !important; /* 允许水平滚动 */
                         }
                         header, footer, .header, .footer {
-                            padding: 5px !important;
+                            padding: 3px !important; /* 减少页眉页脚的内边距 */
                         }
                         .game-over-modal, #game-over-modal {
                             position: fixed !important;
                             z-index: 1000 !important;
                         }
+                        
+                        /* 修复按钮和难度选择超出边框问题 */
+                        #controls, .controls, .control-panel, #control-panel {
+                            display: flex !important;
+                            flex-wrap: wrap !important;
+                            justify-content: center !important;
+                            max-width: 100% !important;
+                            margin: 0 auto 10px auto !important;
+                        }
+                        
+                        /* 处理按钮 */
+                        button, select, .button, #new-game, #new-game-button, .new-game-button, input[type="button"] {
+                            margin: 5px 3px !important;
+                            padding: 4px 8px !important;
+                            font-size: 14px !important;
+                            min-height: 30px !important;
+                            flex-shrink: 0 !important;
+                        }
+                        
+                        /* 处理难度选择下拉框 */
+                        select, #difficulty, .difficulty, select[name="difficulty"] {
+                            max-width: 90px !important;
+                            height: 30px !important;
+                            padding: 2px 4px !important;
+                            font-size: 13px !important;
+                        }
+                        
+                        /* 确保游戏容器宽度适合移动设备 */
+                        #game-container, .game-container, .game, #game {
+                            max-width: 100% !important;
+                            padding: 5px !important;
+                            overflow-x: hidden !important;
+                        }
+                        
+                        /* 移动端优化 */
+                        @media (max-width: 480px) {
+                            td, td button, td input {
+                                min-width: 26px !important; /* 略微减小单元格尺寸 */
+                                min-height: 26px !important;
+                                width: 26px !important;
+                                height: 26px !important;
+                                line-height: 26px !important;
+                                font-size: 13px !important; /* 略微减小字体 */
+                            }
+                            
+                            /* 减少控制按钮的间距 */
+                            .controls, .control-panel, .timer, .counter {
+                                margin: 3px !important;
+                                padding: 3px !important;
+                            }
+                            
+                            /* 优化游戏容器 */
+                            #game-container, .game-container {
+                                padding: 0 !important;
+                            }
+                            
+                            /* 进一步调整控制面板在小屏幕上的布局 */
+                            #controls, .controls, .control-panel, #control-panel {
+                                padding: 0 !important;
+                                gap: 4px !important;
+                            }
+                            
+                            /* 调整按钮大小 */
+                            button, .button, #new-game, #new-game-button, .new-game-button {
+                                font-size: 13px !important;
+                                padding: 3px 6px !important;
+                                margin: 3px 2px !important;
+                                min-height: 28px !important;
+                            }
+                            
+                            /* 调整选择框 */
+                            select, #difficulty, .difficulty {
+                                max-width: 80px !important;
+                                font-size: 12px !important;
+                            }
+                        }
                     `;
                     iframeDoc.head.appendChild(style);
+                    
+                    // 为iframe添加移动端触摸处理脚本
+                    const script = document.createElement('script');
+                    script.textContent = `
+                        // 接收父窗口的模式设置
+                        window.addEventListener('message', function(event) {
+                            if (event.data && event.data.action === 'setMode') {
+                                window.currentFlagMode = event.data.flagMode;
+                                console.log('游戏模式已设置为: ' + (event.data.flagMode ? '标旗模式' : '点击模式'));
+                            }
+                        });
+                        
+                        // 默认为点击模式
+                        window.currentFlagMode = false;
+                        
+                        // 适配触摸界面
+                        document.addEventListener('DOMContentLoaded', function() {
+                            // 找到所有可点击单元格
+                            const cells = document.querySelectorAll('td');
+                            cells.forEach(cell => {
+                                // 移除默认的右键菜单
+                                cell.addEventListener('contextmenu', e => e.preventDefault());
+                                
+                                // 添加触摸处理
+                                cell.addEventListener('click', function(e) {
+                                    if (window.currentFlagMode) {
+                                        // 模拟右键点击标旗
+                                        const rightClickEvent = new MouseEvent('contextmenu', {
+                                            bubbles: true,
+                                            cancelable: true,
+                                            view: window
+                                        });
+                                        e.target.dispatchEvent(rightClickEvent);
+                                    }
+                                    // 否则使用默认的左键点击
+                                });
+                            });
+                        });
+                    `;
+                    iframeDoc.head.appendChild(script);
+                    
+                    // 如果是移动设备，调整缩放比例
+                    if (isMobileDevice()) {
+                        const metaViewport = iframeDoc.querySelector('meta[name="viewport"]');
+                        if (metaViewport) {
+                            metaViewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0');
+                        } else {
+                            const newMeta = document.createElement('meta');
+                            newMeta.name = 'viewport';
+                            newMeta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0';
+                            iframeDoc.head.appendChild(newMeta);
+                        }
+                        
+                        // 在手机屏幕上自动调整游戏区域的缩放比例
+                        const gameBoard = iframeDoc.querySelector('#game-board') || iframeDoc.querySelector('.game-board') || iframeDoc.querySelector('table');
+                        if (gameBoard) {
+                            if (window.innerWidth < 480) {
+                                // 调整缩放比例，确保游戏完整显示
+                                const boardWidth = gameBoard.offsetWidth;
+                                const containerWidth = window.innerWidth - 20; // 减去一些边距
+                                const scale = Math.min(1, containerWidth / boardWidth);
+                                
+                                // 设置缩放并居中
+                                gameBoard.style.transform = `scale(${scale})`;
+                                gameBoard.style.transformOrigin = 'top center';
+                                gameBoard.style.margin = '0 auto';
+                                gameBoard.style.width = 'auto';
+                                
+                                // 移除可能影响布局的固定宽度
+                                const container = iframeDoc.querySelector('.container') || iframeDoc.querySelector('#container');
+                                if (container) {
+                                    container.style.width = 'auto';
+                                    container.style.maxWidth = '100%';
+                                }
+                                
+                                // 修复控制面板布局问题
+                                const controls = iframeDoc.querySelector('#controls') || 
+                                                iframeDoc.querySelector('.controls') || 
+                                                iframeDoc.querySelector('.control-panel');
+                                if (controls) {
+                                    controls.style.display = 'flex';
+                                    controls.style.flexWrap = 'wrap';
+                                    controls.style.justifyContent = 'center';
+                                    controls.style.maxWidth = '100%';
+                                    controls.style.margin = '0 auto 10px auto';
+                                    
+                                    // 确保所有按钮和选择框都有合适的大小
+                                    const buttons = controls.querySelectorAll('button, select, input[type="button"]');
+                                    buttons.forEach(btn => {
+                                        btn.style.margin = '3px 2px';
+                                        btn.style.padding = '3px 6px';
+                                        btn.style.fontSize = '13px';
+                                        btn.style.minHeight = '28px';
+                                    });
+                                }
+                            }
+                        }
+                        
+                        // 尝试在内容加载后再次调整
+                        setTimeout(() => {
+                            const gameBoard = iframeDoc.querySelector('#game-board') || iframeDoc.querySelector('.game-board') || iframeDoc.querySelector('table');
+                            if (gameBoard && window.innerWidth < 480) {
+                                // 第二次调整尝试，确保在DOM完全加载后进行
+                                const boardWidth = gameBoard.offsetWidth;
+                                const containerWidth = window.innerWidth - 20;
+                                const scale = Math.min(1, containerWidth / boardWidth);
+                                gameBoard.style.transform = `scale(${scale})`;
+                            }
+                        }, 500);
+                    }
+                    
+                    // 设置默认中等难度 - 在iframe加载完成后立即执行
+                    setTimeout(() => {
+                        try {
+                            // 尝试找到难度选择器
+                            const difficultySelect = iframeDoc.querySelector('#difficulty') || 
+                                                  iframeDoc.querySelector('select[name="difficulty"]') || 
+                                                  iframeDoc.querySelector('.difficulty') ||
+                                                  iframeDoc.querySelector('select');
+                            
+                            if (difficultySelect) {
+                                console.log('找到难度选择器');
+                                // 确定中等难度的选项索引
+                                let mediumOptionIndex = -1;
+                                
+                                // 遍历所有选项
+                                for(let i = 0; i < difficultySelect.options.length; i++) {
+                                    const optionText = difficultySelect.options[i].text.toLowerCase();
+                                    if (optionText.includes('中') || 
+                                        optionText.includes('medium') || 
+                                        optionText === '2' || 
+                                        optionText.includes('中等')) {
+                                        mediumOptionIndex = i;
+                                        console.log('找到中等难度选项: ', optionText);
+                                        break;
+                                    }
+                                }
+                                
+                                // 如果没有特定的选项，默认选择第二个选项（通常是中等）
+                                if (mediumOptionIndex === -1 && difficultySelect.options.length >= 3) {
+                                    mediumOptionIndex = 1; // 第二个选项，索引为1
+                                }
+                                
+                                // 应用选择
+                                if (mediumOptionIndex >= 0) {
+                                    difficultySelect.selectedIndex = mediumOptionIndex;
+                                    
+                                    // 触发事件以确保选择生效
+                                    const event = new Event('change', { bubbles: true });
+                                    difficultySelect.dispatchEvent(event);
+                                    
+                                    // 尝试找到并点击新游戏/重置按钮
+                                    setTimeout(() => {
+                                        const newGameBtn = iframeDoc.querySelector('#new-game') || 
+                                                        iframeDoc.querySelector('.new-game-button') || 
+                                                        iframeDoc.querySelector('#reset') ||
+                                                        iframeDoc.querySelector('button:not([id]):not([class])');
+                                        
+                                        if (newGameBtn) {
+                                            console.log('点击新游戏按钮');
+                                            newGameBtn.click();
+                                        }
+                                    }, 100);
+                                }
+                            }
+                        } catch(e) {
+                            console.log('设置默认难度出错:', e);
+                        }
+                    }, 300);
                 } catch(e) {
                     console.log('Unable to access iframe content, possibly due to cross-origin restrictions', e);
                 }
@@ -372,17 +765,27 @@
             const gameFrame = document.getElementById('gameFrame');
             const windowHeight = window.innerHeight;
             
+            // 检测移动端横屏模式
+            const isLandscape = window.innerWidth > window.innerHeight;
+            
             // Dynamically adjust game height based on screen width
-            if (window.innerWidth <= 480) {
-                // Small screen devices
-                gameFrame.style.height = '450px';
+            if (isLandscape && window.innerWidth <= 900) {
+                // 横屏模式
+                gameFrame.style.height = (windowHeight * 0.7) + 'px';
+                document.getElementById('mobileControls').style.display = 'none'; // 横屏隐藏控制栏
+            } else if (window.innerWidth <= 480) {
+                // Small screen devices - 设置高度为680px
+                gameFrame.style.height = '680px';
+                document.getElementById('mobileControls').style.display = 'block';
             } else if (window.innerWidth <= 768) {
                 // Medium screen devices
                 gameFrame.style.height = '500px';
+                document.getElementById('mobileControls').style.display = 'block';
             } else {
                 // Calculate ideal height: 70% of window height, min 400px, max 700px
                 const idealHeight = Math.max(400, Math.min(700, windowHeight * 0.7));
                 gameFrame.style.height = idealHeight + 'px';
+                document.getElementById('mobileControls').style.display = 'none'; // 桌面版隐藏控制栏
             }
         }
         
@@ -400,6 +803,9 @@
                 } else if (gameFrame.msRequestFullscreen) {
                     gameFrame.msRequestFullscreen();
                 }
+                
+                // 全屏模式隐藏移动控制栏
+                document.getElementById('mobileControls').style.display = 'none';
             } else {
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
@@ -409,6 +815,11 @@
                     document.webkitExitFullscreen();
                 } else if (document.msExitFullscreen) {
                     document.msExitFullscreen();
+                }
+                
+                // 退出全屏后，如果是移动设备，重新显示控制栏
+                if (window.innerWidth <= 768) {
+                    document.getElementById('mobileControls').style.display = 'block';
                 }
             }
         }
