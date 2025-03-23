@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Combat - Game Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0071e3;
+            --primary-hover: #0077ed;
+            --text-color: #1d1d1f;
+            --text-secondary: #86868b;
+            --background-light: #f5f5f7;
+            --card-background: #ffffff;
+            --border-radius: 12px;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --transition-normal: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-color);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+        
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Header Navigation */
+        header {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            padding: 0.8rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-normal);
+        }
+        
+        .back-button:hover {
+            color: var(--primary-hover);
+        }
+        
+        .back-icon {
+            margin-right: 0.5rem;
+        }
+        
+        .page-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .fullscreen-button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            padding: 0.5rem;
+        }
+        
+        .fullscreen-icon {
+            margin-right: 0.3rem;
+        }
+        
+        /* Main Content Area */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        /* Introduction */
+        .game-intro {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .game-intro p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Game Area */
+        .game-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        
+        .game-frame {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: var(--border-radius);
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+            transition: opacity 0.3s ease;
+            opacity: 0.9;
+        }
+        
+        /* Game Rules */
+        .game-rules {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .game-rules h2 {
+            color: var(--text-color);
+            font-size: 1.4rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .game-rules h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+        
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .rule-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-color);
+        }
+        
+        .rule-section ul {
+            padding-left: 1.25rem;
+        }
+        
+        .rule-section li {
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Footer */
+        footer {
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 1rem;
+            }
+            
+            .fullscreen-text {
+                display: none;
+            }
+            
+            .game-intro, .game-rules {
+                padding: 1rem;
+            }
+            
+            .rules-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .game-frame {
+                height: 500px;
+            }
+            
+            .rule-section li {
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Header Navigation -->
+        <header>
+            <a href="index.html" class="back-button">
+                <span class="back-icon">←</span>
+                Back to Games
+            </a>
+            <h1 class="page-title">Air Combat</h1>
+            <button id="fullscreenBtn" class="fullscreen-button">
+                <span class="fullscreen-icon">⛶</span>
+                <span class="fullscreen-text">Fullscreen</span>
+            </button>
+        </header>
+        
+        <main>
+            <!-- Game Introduction -->
+            <section class="game-intro">
+                <p>Air Combat is a fast-paced shoot 'em up game where you control an aircraft to dodge enemy fire, defeat opponents, and achieve the highest possible score in this thrilling aerial battle.</p>
+            </section>
+            
+            <!-- Game Area -->
+            <section class="game-wrapper">
+                <iframe id="gameFrame" src="./games/plane-battle/index.html" class="game-frame" allowfullscreen scrolling="no"></iframe>
+            </section>
+            
+            <!-- Game Rules -->
+            <section class="game-rules">
+                <h2>How to Play</h2>
+                <div class="rules-grid">
+                    <div class="rule-section">
+                        <h3>Basic Controls</h3>
+                        <ul>
+                            <li><strong>Movement:</strong> Use the left and right arrow keys to move your aircraft horizontally.</li>
+                            <li><strong>Firing:</strong> Press the spacebar to shoot at enemy aircraft.</li>
+                            <li><strong>Goal:</strong> Survive as long as possible while destroying enemy aircraft and collecting power-ups.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="rule-section">
+                        <h3>Game Mechanics</h3>
+                        <ul>
+                            <li><strong>Enemy Aircraft:</strong> Different types of enemy aircraft will appear with varying movement patterns and health points.</li>
+                            <li><strong>Power-ups:</strong> Collect yellow power-ups to increase your firing rate and green ones to restore your health.</li>
+                            <li><strong>Health:</strong> Your aircraft has limited health. When hit by enemy fire or collision, your health decreases.</li>
+                            <li><strong>Score:</strong> Each enemy destroyed increases your score. Larger or more difficult enemies yield higher scores.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="rule-section">
+                        <h3>Tips for Success</h3>
+                        <ul>
+                            <li>Keep moving to avoid enemy fire – staying in one place makes you an easy target.</li>
+                            <li>Prioritize collecting power-ups, especially when facing waves of stronger enemies.</li>
+                            <li>Focus on destroying enemies at the top of the screen first to reduce incoming fire.</li>
+                            <li>Learn the patterns of different enemy types to anticipate their movements and attacks.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Game Hub | All games are for entertainment purposes only</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Listen for window resize and adjust game layout
+            window.addEventListener('resize', adjustGameHeight);
+            
+            // Fullscreen button event
+            document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
+            
+            // Initial game height adjustment
+            adjustGameHeight();
+            
+            // Handle iframe load completion
+            document.getElementById('gameFrame').onload = function() {
+                try {
+                    // Inject custom styles into game iframe
+                    const iframeDoc = this.contentDocument || this.contentWindow.document;
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        body {
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            overflow: visible !important;
+                            height: auto !important;
+                        }
+                        * {
+                            box-sizing: border-box !important;
+                        }
+                        canvas {
+                            display: block !important;
+                            margin: 0 auto !important;
+                            max-width: 100% !important;
+                        }
+                        .container, #game-container {
+                            max-width: 100% !important;
+                            padding: 0 !important;
+                            margin: 0 auto !important;
+                        }
+                        .game-area {
+                            width: 100% !important;
+                            height: auto !important;
+                            position: relative !important;
+                        }
+                        header, footer, .header, .footer {
+                            padding: 5px !important;
+                        }
+                    `;
+                    iframeDoc.head.appendChild(style);
+                } catch(e) {
+                    console.log('Unable to access iframe content, possibly due to cross-origin restrictions', e);
+                }
+                
+                // Fade-in effect
+                setTimeout(() => {
+                    this.style.opacity = 1;
+                }, 200);
+            };
+            
+            // Automatically focus the game area when clicked
+            document.getElementById('gameFrame').addEventListener('click', function() {
+                this.focus();
+            });
+        });
+        
+        // Adjust game height based on window size
+        function adjustGameHeight() {
+            const gameFrame = document.getElementById('gameFrame');
+            const windowHeight = window.innerHeight;
+            
+            // Dynamically adjust game height based on screen width
+            if (window.innerWidth <= 480) {
+                // Small screen devices
+                gameFrame.style.height = '450px';
+            } else if (window.innerWidth <= 768) {
+                // Medium screen devices
+                gameFrame.style.height = '500px';
+            } else {
+                // Calculate ideal height: 70% of window height, min 400px, max 700px
+                const idealHeight = Math.max(400, Math.min(700, windowHeight * 0.7));
+                gameFrame.style.height = idealHeight + 'px';
+            }
+        }
+        
+        // Fullscreen functionality
+        function toggleFullscreen() {
+            const gameFrame = document.getElementById('gameFrame');
+            
+            if (!document.fullscreenElement) {
+                if (gameFrame.requestFullscreen) {
+                    gameFrame.requestFullscreen();
+                } else if (gameFrame.mozRequestFullScreen) {
+                    gameFrame.mozRequestFullScreen();
+                } else if (gameFrame.webkitRequestFullscreen) {
+                    gameFrame.webkitRequestFullscreen();
+                } else if (gameFrame.msRequestFullscreen) {
+                    gameFrame.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+    </script>
+</body>
+</html> 
