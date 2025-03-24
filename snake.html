@@ -1,12 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+        <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J2S2NR7VKG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-J2S2NR7VKG');
+</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake - Game Hub</title>
+    <title>Play Snake Game Online Free | Classic Arcade Game | Game Hub</title>
+    <meta name="description" content="Play the classic Snake game for free online at Game Hub. Control your snake, eat food to grow longer, and test your reflexes in this addictive HTML5 arcade game. No download required!">
+    <meta name="keywords" content="snake game, classic arcade game, HTML5 game, free online game, snake classic, retro game">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/seo-components.css">
+    <!-- 预加载关键游戏资源 -->
+    <link rel="preload" href="games/snakes/snakes.js" as="script">
+    <link rel="preload" href="games/snakes/snakes.min.css" as="style">
     <style>
         :root {
             --primary-color: #0071e3;
@@ -91,45 +109,26 @@
             padding: 0.5rem;
         }
         
-        .fullscreen-icon {
-            margin-right: 0.3rem;
+        .fullscreen-button:hover {
+            color: var(--text-color);
         }
         
-        /* Main Content Area */
-        main {
+        .game-container {
             flex: 1;
             display: flex;
             flex-direction: column;
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 1rem;
-        }
-        
-        /* Introduction */
-        .game-intro {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 1.2rem;
-            margin-bottom: 1rem;
-            text-align: center;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .game-intro p {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        /* Game Area */
-        .game-wrapper {
-            flex: 1;
-            display: flex;
-            justify-content: center;
             align-items: center;
-            margin-bottom: 1rem;
+            padding: 1.5rem;
+        }
+        
+        .game-card {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            width: 100%;
+            max-width: 800px;
+            height: auto;
             position: relative;
         }
         
@@ -137,261 +136,397 @@
             width: 100%;
             height: 600px;
             border: none;
-            border-radius: var(--border-radius);
-            background-color: white;
-            box-shadow: var(--shadow-sm);
-            transition: opacity 0.3s ease;
-            opacity: 0.9;
         }
         
-        /* Game Rules */
-        .game-rules {
-            background-color: white;
-            border-radius: var(--border-radius);
+        .game-meta {
             padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: var(--shadow-sm);
         }
         
-        .game-rules h2 {
-            color: var(--text-color);
-            font-size: 1.4rem;
-            margin-bottom: 1.2rem;
-            position: relative;
-            display: inline-block;
+        .game-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
         }
         
-        .game-rules h2::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 40px;
-            height: 3px;
-            background-color: var(--primary-color);
-            border-radius: 2px;
-        }
-        
-        .rules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .rule-section h3 {
-            font-size: 1.1rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-color);
-        }
-        
-        .rule-section ul {
-            padding-left: 1.25rem;
-        }
-        
-        .rule-section li {
-            margin-bottom: 0.75rem;
+        .game-description {
             color: var(--text-secondary);
+            margin-bottom: 1.5rem;
         }
         
-        /* Footer */
-        footer {
+        .game-controls {
+            background-color: rgba(0,0,0,0.03);
             padding: 1rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            border-top: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
         }
         
-        /* Responsive Design */
+        .game-controls h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .game-controls p {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .share-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background-color: #f5f5f7;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: var(--transition-normal);
+        }
+        
+        .share-button:hover {
+            background-color: #e5e5ea;
+        }
+        
+        .share-icon {
+            margin-right: 0.5rem;
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            .page-title {
-                font-size: 1rem;
+            .game-frame {
+                height: 450px;
             }
             
-            .fullscreen-text {
-                display: none;
+            .game-title {
+                font-size: 1.5rem;
             }
             
-            .game-intro, .game-rules {
+            .game-meta {
                 padding: 1rem;
-            }
-            
-            .rules-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
             }
         }
         
         @media (max-width: 480px) {
             .game-frame {
-                height: 500px;
+                height: 350px;
             }
             
-            .rule-section li {
-                margin-bottom: 0.5rem;
+            .game-title {
+                font-size: 1.3rem;
+            }
+            
+            .game-meta {
+                padding: 0.8rem;
+            }
+            
+            .share-buttons {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Loading State */
+        .game-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255,255,255,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid var(--primary-color);
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            animation: rotation 1s linear infinite;
+        }
+        
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Footer Styles */
+        .site-footer {
+            background-color: #1d1d1f;
+            color: #f5f5f7;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .footer-legal {
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1rem 0;
+        }
+        
+        .footer-links li a {
+            color: #f5f5f7;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links li a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        
+        .footer-bottom {
+            color: #86868b;
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-links {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            
+            .site-footer {
+                padding: 1.5rem 1rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="page-container">
-        <!-- Header Navigation -->
         <header>
             <a href="index.html" class="back-button">
-                <span class="back-icon">←</span>
-                Back to Games
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="back-icon">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Home
             </a>
-            <h1 class="page-title">Snake</h1>
-            <button id="fullscreenBtn" class="fullscreen-button">
-                <span class="fullscreen-icon">⛶</span>
-                <span class="fullscreen-text">Fullscreen</span>
+            <div class="page-title">Snake</div>
+            <button class="fullscreen-button" onclick="toggleFullscreen(document.querySelector('.game-frame'))">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                </svg>
+                Fullscreen
             </button>
         </header>
         
-        <main>
-            <!-- Game Introduction -->
-            <section class="game-intro">
-                <p>The classic Snake game challenges your reflexes and strategy as you navigate a growing snake to collect food while avoiding collisions with walls and yourself.</p>
-            </section>
-            
-            <!-- Game Area -->
-            <section class="game-wrapper">
-                <iframe id="gameFrame" src="./games/snakes/index.html" class="game-frame" allowfullscreen scrolling="no"></iframe>
-            </section>
-            
-            <!-- Game Rules -->
-            <section class="game-rules">
-                <h2>How to Play</h2>
-                <div class="rules-grid">
-                    <div class="rule-section">
-                        <h3>Basic Rules</h3>
-                        <ul>
-                            <li><strong>Goal:</strong> Control the snake to eat as much food as possible and grow without hitting any obstacles.</li>
-                            <li><strong>Controls:</strong> Use the arrow keys (↑, ↓, ←, →) to change the direction of the snake.</li>
-                            <li><strong>Game Over:</strong> The game ends if your snake hits a wall or collides with its own body.</li>
-                        </ul>
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb-container" aria-label="breadcrumb">
+            <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+                <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <a href="index.html" itemprop="item">
+                        <span itemprop="name">Home</span>
+                    </a>
+                    <meta itemprop="position" content="1" />
+                </li>
+                
+                <li class="breadcrumb-item active breadcrumb-current" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <span itemprop="name">Snake</span>
+                    <meta itemprop="position" content="2" />
+                </li>
+            </ol>
+        </nav>
+        
+        <div class="game-container">
+            <div class="game-card">
+                <div class="game-loading">
+                    <div class="loader"></div>
+                </div>
+                <!-- 使用延迟加载和优化策略 -->
+                <div id="game-placeholder"></div>
+                
+                <div class="game-meta">
+                    <h1 class="game-title">Snake - Classic Arcade Game</h1>
+                    <p class="game-description">Control the snake, eat food to grow longer, and avoid hitting the walls or your own body. A classic arcade-style game that's easy to learn but challenging to master.</p>
+                    
+                    <div class="game-controls">
+                        <h3>Game Controls:</h3>
+                        <p>- Arrow Keys (↑ ↓ ← →): Control snake movement direction</p>
+                        <p>- Space Bar: Pause/Resume game</p>
+                        <p>- P Key: Pause/Resume game</p>
+                        <p>- R Key: Restart game</p>
                     </div>
                     
-                    <div class="rule-section">
-                        <h3>Game Mechanics</h3>
-                        <ul>
-                            <li>Each time your snake eats a piece of food, it grows longer and your score increases.</li>
-                            <li>As your score increases, the game may speed up, making it more challenging.</li>
-                            <li>The snake moves continuously in the direction you last input.</li>
-                            <li>You cannot immediately reverse your direction (e.g., if moving right, you cannot immediately move left).</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="rule-section">
-                        <h3>Tips for Success</h3>
-                        <ul>
-                            <li>Plan your route ahead of time to avoid getting trapped by your own snake.</li>
-                            <li>Use the edges of the playing field strategically to maximize your maneuverability.</li>
-                            <li>Create patterns like spirals or zigzags to efficiently use the available space.</li>
-                            <li>Stay focused and develop quick reflexes to navigate tight spots as your snake grows longer.</li>
-                        </ul>
+                    <div class="share-buttons">
+                        <a href="javascript:void(0)" onclick="shareGame('twitter')" class="share-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="share-icon">
+                                <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+                            </svg>
+                            Share
+                        </a>
+                        <a href="javascript:void(0)" onclick="shareGame('facebook')" class="share-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="share-icon">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg>
+                            Share
+                        </a>
                     </div>
                 </div>
-            </section>
-        </main>
+            </div>
+        </div>
         
-        <footer>
-            <p>&copy; 2025 Game Hub | All games are for entertainment purposes only</p>
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-container">
+                <div class="footer-legal">
+                    <ul class="footer-links">
+                        <li><a href="./privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="./terms-of-service.html">Terms of Service</a></li>
+                        <li><a href="./cookie-policy.html">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; <span id="current-year">2023</span> Game Hub. All rights reserved.</p>
+                    <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
+                </div>
+                
+                <!-- Structured Data -->
+                <div class="structured-data" itemscope itemtype="https://schema.org/VideoGame">
+                    <meta itemprop="name" content="Snake">
+                    <meta itemprop="description" content="Control the snake, eat food to grow longer, and avoid hitting the walls or your own body. A classic arcade-style game that's easy to learn but challenging to master.">
+                    <meta itemprop="genre" content="Arcade">
+                    <meta itemprop="gamePlatform" content="Web Browser">
+                    <meta itemprop="applicationCategory" content="Game">
+                    <div itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                        <meta itemprop="price" content="0">
+                        <meta itemprop="priceCurrency" content="USD">
+                        <meta itemprop="availability" content="https://schema.org/InStock">
+                    </div>
+                </div>
+            </div>
         </footer>
     </div>
     
+    <script src="js/seo-components.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Listen for window resize and adjust game layout
-            window.addEventListener('resize', adjustGameHeight);
+        // 新的优化加载策略
+        (function() {
+            // 预加载关键资源
+            function preloadResources() {
+                // 预加载游戏JS
+                var gameScript = document.createElement('script');
+                gameScript.src = 'games/snakes/snakes.js';
+                document.head.appendChild(gameScript);
+                
+                // 预加载CSS
+                var gameCss = document.createElement('link');
+                gameCss.rel = 'stylesheet';
+                gameCss.href = 'games/snakes/snakes.min.css';
+                document.head.appendChild(gameCss);
+            }
             
-            // Fullscreen button event
-            document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
+            // 延迟加载游戏iframe
+            function loadGameFrame() {
+                var placeholder = document.getElementById('game-placeholder');
+                var gameFrame = document.createElement('iframe');
+                gameFrame.src = 'games/snakes/index.html';
+                gameFrame.className = 'game-frame';
+                gameFrame.id = 'gameFrame';
+                gameFrame.title = 'Snake Game';
+                gameFrame.allowfullscreen = true;
+                
+                placeholder.parentNode.replaceChild(gameFrame, placeholder);
+                
+                // 处理游戏加载
+                var gameLoading = document.querySelector('.game-loading');
+                
+                gameFrame.onload = function() {
+                    // 隐藏加载动画
+                    if (gameLoading) {
+                        gameLoading.style.display = 'none';
+                    }
+                    
+                    // 尝试访问iframe内容
+                    try {
+                        const iframeDoc = gameFrame.contentDocument || gameFrame.contentWindow.document;
+                        console.log('Snake game iframe loaded successfully');
+                    } catch (e) {
+                        console.log('Unable to access iframe content, possibly due to cross-origin restrictions', e);
+                    }
+                    
+                    // 确保游戏得到焦点
+                    try {
+                        if (gameFrame.contentWindow) {
+                            gameFrame.contentWindow.focus();
+                        }
+                    } catch (e) {
+                        console.warn('Could not focus on game window:', e);
+                    }
+                };
+                
+                // 设置更短的超时时间
+                setTimeout(function() {
+                    if (gameLoading && gameLoading.style.display !== 'none') {
+                        gameLoading.style.display = 'none';
+                        console.log('Forced hiding of loading animation after timeout');
+                    }
+                }, 3000); // 减少至3秒
+            }
             
-            // Initial game height adjustment
-            adjustGameHeight();
-            
-            // Handle iframe load completion
-            document.getElementById('gameFrame').onload = function() {
-                try {
-                    // Inject custom styles into game iframe
-                    const iframeDoc = this.contentDocument || this.contentWindow.document;
-                    const style = document.createElement('style');
-                    style.textContent = `
-                        body {
-                            margin: 0 !important;
-                            padding: 0 !important;
-                            overflow: visible !important;
-                            height: auto !important;
-                        }
-                        * {
-                            box-sizing: border-box !important;
-                        }
-                        canvas {
-                            display: block !important;
-                            margin: 0 auto !important;
-                            max-width: 100% !important;
-                        }
-                        .container, #game-container {
-                            max-width: 100% !important;
-                            padding: 10px !important;
-                            margin: 0 auto !important;
-                        }
-                        header, footer, .header, .footer {
-                            padding: 5px !important;
-                        }
-                    `;
-                    iframeDoc.head.appendChild(style);
-                } catch(e) {
-                    console.log('Unable to access iframe content, possibly due to cross-origin restrictions', e);
+            // 页面加载后执行
+            document.addEventListener('DOMContentLoaded', function() {
+                // 立即开始预加载资源
+                preloadResources();
+                
+                // 当用户可以交互时加载游戏
+                if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                    loadGameFrame();
+                } else {
+                    window.addEventListener('load', loadGameFrame);
+                }
+            });
+        })();
+        
+        // Fullscreen toggle functionality
+        function toggleFullscreen(element) {
+            if (!document.fullscreenElement &&    // Standard method
+                !document.mozFullScreenElement && // Firefox
+                !document.webkitFullscreenElement && // Chrome, Safari and Opera
+                !document.msFullscreenElement) {  // IE/Edge
+                
+                // Request fullscreen
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if (element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                } else if (element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
                 }
                 
-                // Fade-in effect
-                setTimeout(() => {
-                    this.style.opacity = 1;
-                }, 200);
-            };
-            
-            // Automatically focus the game area when clicked
-            document.getElementById('gameFrame').addEventListener('click', function() {
-                this.focus();
-            });
-        });
-        
-        // Adjust game height based on window size
-        function adjustGameHeight() {
-            const gameFrame = document.getElementById('gameFrame');
-            const windowHeight = window.innerHeight;
-            
-            // Dynamically adjust game height based on screen width
-            if (window.innerWidth <= 480) {
-                // Small screen devices
-                gameFrame.style.height = '450px';
-            } else if (window.innerWidth <= 768) {
-                // Medium screen devices
-                gameFrame.style.height = '500px';
+                // Update button text
+                document.querySelector('.fullscreen-button').textContent = 'Exit Fullscreen';
             } else {
-                // Calculate ideal height: 70% of window height, min 400px, max 700px
-                const idealHeight = Math.max(400, Math.min(700, windowHeight * 0.7));
-                gameFrame.style.height = idealHeight + 'px';
-            }
-        }
-        
-        // Fullscreen functionality
-        function toggleFullscreen() {
-            const gameFrame = document.getElementById('gameFrame');
-            
-            if (!document.fullscreenElement) {
-                if (gameFrame.requestFullscreen) {
-                    gameFrame.requestFullscreen();
-                } else if (gameFrame.mozRequestFullScreen) {
-                    gameFrame.mozRequestFullScreen();
-                } else if (gameFrame.webkitRequestFullscreen) {
-                    gameFrame.webkitRequestFullscreen();
-                } else if (gameFrame.msRequestFullscreen) {
-                    gameFrame.msRequestFullscreen();
-                }
-            } else {
+                // Exit fullscreen
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
                 } else if (document.mozCancelFullScreen) {
@@ -401,7 +536,47 @@
                 } else if (document.msExitFullscreen) {
                     document.msExitFullscreen();
                 }
+                
+                // Update button text
+                document.querySelector('.fullscreen-button').innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                    </svg>
+                    Fullscreen
+                `;
             }
+        }
+        
+        // Add fullscreen change event listener
+        document.addEventListener('fullscreenchange', updateFullscreenButton);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+        document.addEventListener('mozfullscreenchange', updateFullscreenButton);
+        document.addEventListener('MSFullscreenChange', updateFullscreenButton);
+        
+        function updateFullscreenButton() {
+            var button = document.querySelector('.fullscreen-button');
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+                button.innerHTML = 'Exit Fullscreen';
+            } else {
+                button.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                    </svg>
+                    Fullscreen
+                `;
+            }
+        }
+        
+        // Social media sharing functionality
+        function shareGame(platform) {
+            var url = encodeURIComponent(window.location.href);
+            var title = encodeURIComponent('Play Snake Game on Game Hub!');
+            var shareUrls = {
+                twitter: 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title,
+                facebook: 'https://www.facebook.com/sharer/sharer.php?u=' + url
+            };
+            
+            window.open(shareUrls[platform], '_blank', 'width=600,height=400');
         }
     </script>
 </body>

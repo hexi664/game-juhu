@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+         <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J2S2NR7VKG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-J2S2NR7VKG');
+</script>
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Air Combat - Game Hub</title>
+    <title>Air Combat | Thrilling Arcade Shooter Game | Game Hub</title>
+    <meta name="description" content="Take to the skies in this exciting Air Combat arcade game! Control your aircraft, dodge enemy fire, collect power-ups and aim for the highest score in this fast-paced HTML5 shooter game.">
+    <meta name="keywords" content="air combat, aircraft game, arcade shooter, HTML5 game, free online game, airplane game, action game">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/seo-components.css">
     <style>
         :root {
             --primary-color: #0071e3;
@@ -193,13 +207,60 @@
             color: var(--text-secondary);
         }
         
-        /* Footer */
-        footer {
-            padding: 1rem;
+        /* Footer Styles */
+        .site-footer {
+            background-color: #1d1d1f;
+            color: #f5f5f7;
             text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .footer-legal {
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1rem 0;
+        }
+        
+        .footer-links li a {
+            color: #f5f5f7;
+            text-decoration: none;
             font-size: 0.9rem;
-            color: var(--text-secondary);
-            border-top: 1px solid rgba(0,0,0,0.1);
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links li a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        
+        .footer-bottom {
+            color: #86868b;
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-links {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            
+            .site-footer {
+                padding: 1.5rem 1rem;
+            }
         }
         
         /* Responsive Design */
@@ -248,6 +309,23 @@
             </button>
         </header>
         
+        <!-- 面包屑导航 -->
+        <nav class="breadcrumb-container" aria-label="breadcrumb">
+            <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+                <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <a href="index.html" itemprop="item">
+                        <span itemprop="name">Home</span>
+                    </a>
+                    <meta itemprop="position" content="1" />
+                </li>
+                
+                <li class="breadcrumb-item active breadcrumb-current" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <span itemprop="name">Air Combat</span>
+                    <meta itemprop="position" content="2" />
+                </li>
+            </ol>
+        </nav>
+        
         <main>
             <!-- Game Introduction -->
             <section class="game-intro">
@@ -295,8 +373,21 @@
             </section>
         </main>
         
-        <footer>
-            <p>&copy; 2025 Game Hub | All games are for entertainment purposes only</p>
+        <footer class="site-footer">
+            <div class="footer-container">
+                <div class="footer-legal">
+                    <ul class="footer-links">
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms-of-service.html">Terms of Service</a></li>
+                        <li><a href="cookie-policy.html">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; <span id="current-year">2023</span> Game Hub. All rights reserved.</p>
+                    <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
+                </div>
+            </div>
         </footer>
     </div>
     

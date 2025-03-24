@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-J2S2NR7VKG"></script>
@@ -13,8 +13,11 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>贪吃蛇游戏</title>
-    <link rel="stylesheet" href="/games/snakes/snakes.min.css">
+    <title>Snake Game</title>
+    <!-- 预加载关键样式和脚本 -->
+    <link rel="preload" href="snakes.min.css" as="style">
+    <link rel="preload" href="snakes.js" as="script">
+    <!-- 内联关键CSS -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -60,42 +63,94 @@
             display: none;
         }
         
-        /* 在iframe中时隐藏返回按钮 */
+        /* Hide back button when in iframe */
         .in-iframe .back-button {
             display: none;
         }
+        
+        /* Game specific styles */
+        #game-canvas {
+            border: 1px solid #333;
+            background-color: black;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        #score-container {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        #current-score, #high-score {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        /* 添加游戏加载指示器 */
+        .game-loading {
+            display: none;
+            margin: 20px auto;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top: 4px solid #4CAF50;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
+    <!-- 非阻塞方式加载CSS -->
+    <link rel="stylesheet" href="snakes.min.css" media="print" onload="this.media='all'">
 </head>
 <body>
     <div class="game-container">
-        <h1>贪吃蛇游戏</h1>
+        <h1>Snake Game</h1>
         
         <div id="error-container" class="error-message"></div>
         
         <div id="game">
-            <!-- 游戏将在这里加载 -->
+            <!-- Score display -->
+            <div id="score-container">
+                <div id="current-score">Score: 0</div>
+                <div id="high-score">High Score: 0</div>
+            </div>
+            
+            <!-- 添加加载指示器 -->
+            <div id="game-loading" class="game-loading"></div>
+            
+            <!-- Game canvas -->
+            <canvas id="game-canvas" width="400" height="400"></canvas>
         </div>
         
         <div class="controls">
-            <p>使用键盘方向键控制蛇的移动</p>
+            <p>Use arrow keys to control the snake</p>
+            <p><strong>Arrow Keys</strong>: Change direction | <strong>Space Bar</strong>: Restart after game over</p>
         </div>
         
-        <a href="../../index.html" class="back-button">返回游戏列表</a>
+        <a href="../../index.html" class="back-button">Return to Games</a>
     </div>
 
     <script>
-        // 错误处理函数
+        // 显示加载指示器
+        document.getElementById('game-loading').style.display = 'block';
+        
+        // Error handling function
         window.onerror = function(message, source, lineno, colno, error) {
             var errorContainer = document.getElementById('error-container');
             if (errorContainer) {
                 errorContainer.style.display = 'block';
-                errorContainer.innerHTML = '<p>游戏加载错误: ' + message + '</p>';
-                console.error('游戏错误:', message, source, lineno, colno, error);
+                errorContainer.innerHTML = '<p>Game loading error: ' + message + '</p>';
+                console.error('Game error:', message, source, lineno, colno, error);
             }
-            return true; // 阻止默认错误处理
+            return true; // Prevent default error handling
         };
         
-        // 检测是否在iframe中运行
+        // Check if running in iframe
         function inIframe() {
             try {
                 return window.self !== window.top;
@@ -104,33 +159,77 @@
             }
         }
         
-        // 如果在iframe中运行，添加特殊类
+        // If running in iframe, add special class
         if (inIframe()) {
             document.body.classList.add('in-iframe');
         }
     </script>
-    <script src="/games/snakes/snakes.js"></script>
+    
+    <!-- 使用延迟加载策略 -->
     <script>
-        // 游戏初始化代码
-        window.onload = function() {
+        // 创建脚本元素
+        function loadGameScript() {
+            return new Promise((resolve, reject) => {
+                var script = document.createElement('script');
+                script.src = 'snakes.js';
+                script.onload = resolve;
+                script.onerror = reject;
+                document.body.appendChild(script);
+            });
+        }
+        
+        // 游戏初始化
+        function initializeGame() {
+            console.log('开始初始化游戏...');
             try {
-                console.log('页面加载完成，初始化游戏...');
+                // 初始化游戏
                 var game = new Snakes();
-                console.log('游戏初始化成功');
+                console.log('游戏初始化成功！');
                 
-                // 如果在iframe中，确保游戏获得焦点
+                // 隐藏加载指示器
+                document.getElementById('game-loading').style.display = 'none';
+                
+                // 确保游戏获得焦点
                 if (inIframe()) {
                     window.focus();
                 }
             } catch (error) {
                 console.error('游戏初始化失败:', error);
+                
                 var errorContainer = document.getElementById('error-container');
                 if (errorContainer) {
                     errorContainer.style.display = 'block';
-                    errorContainer.innerHTML = '<p>游戏初始化失败: ' + error.message + '</p>';
+                    errorContainer.innerHTML = '<p>Game initialization failed: ' + error.message + '</p>';
                 }
+                
+                // 隐藏加载指示器
+                document.getElementById('game-loading').style.display = 'none';
             }
-        };
+        }
+        
+        // 延迟加载脚本
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            loadGameScript().then(initializeGame).catch(error => {
+                console.error('Failed to load game script:', error);
+                document.getElementById('game-loading').style.display = 'none';
+                document.getElementById('error-container').style.display = 'block';
+                document.getElementById('error-container').innerHTML = '<p>Failed to load game: ' + error + '</p>';
+            });
+        } else {
+            window.addEventListener('DOMContentLoaded', function() {
+                loadGameScript().then(initializeGame).catch(error => {
+                    console.error('Failed to load game script:', error);
+                    document.getElementById('game-loading').style.display = 'none';
+                    document.getElementById('error-container').style.display = 'block';
+                    document.getElementById('error-container').innerHTML = '<p>Failed to load game: ' + error + '</p>';
+                });
+            });
+        }
+        
+        // 设置超时，确保加载指示器最终会隐藏
+        setTimeout(function() {
+            document.getElementById('game-loading').style.display = 'none';
+        }, 5000);
     </script>
 </body>
 </html> 

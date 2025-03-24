@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-J2S2NR7VKG"></script>
@@ -13,19 +13,22 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Play the best free HTML5 games online. Our curated collection includes action, puzzle, racing and adventure games for all ages.">
-    <meta name="keywords" content="HTML5 games, free online games, browser games, action games, puzzle games">
+    <meta name="description" content="Play the best free HTML5 games online at Game Hub. Discover our curated collection of arcade, puzzle, action, and adventure games that load instantly in your browser - no downloads needed!">
+    <meta name="keywords" content="HTML5 games, free online games, browser games, action games, puzzle games, arcade games, no download games">
     <meta name="author" content="Game Hub">
-    <meta property="og:title" content="Game Hub - Play Free HTML5 Games Online">
-    <meta property="og:description" content="Discover and play the best free HTML5 games online. No downloads required.">
+    <meta property="og:title" content="Free HTML5 Games Online | Game Hub">
+    <meta property="og:description" content="Discover and play the best free HTML5 games online. No downloads required, just instant fun in your browser!">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://yourgamesite.com">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="canonical" href="https://yourgamesite.com">
-    <title>Game Hub - Play Free HTML5 Games Online</title>
+    <title>Free HTML5 Games Online | Game Hub</title>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/seo-components.css">
     <style>
         :root {
             --primary-color: #0071e3;
@@ -63,23 +66,114 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            padding: 1.5rem 0;
-            text-align: center;
+            padding: 1rem 2rem;
             border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
         }
         
         .site-title {
             font-weight: 600;
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             letter-spacing: -0.02em;
             margin: 0;
         }
         
         .subtitle {
-            font-size: 1.2rem;
-            margin-top: 0.5rem;
-            color: var(--text-secondary);
-            font-weight: 400;
+            display: none; /* Hide subtitle for cleaner header */
+        }
+        
+        /* Navigation Bar Styles */
+        .main-nav {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-list {
+            display: flex;
+            justify-content: flex-end;
+            list-style: none;
+            gap: 1.5rem;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav-list li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: var(--transition-normal);
+        }
+        
+        .nav-list li a:hover, 
+        .nav-list li a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Responsive navigation for mobile devices */
+        .mobile-nav-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+            padding: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            .header-left {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .main-nav {
+                width: 100%;
+                margin-top: 1rem;
+                display: block;
+            }
+            
+            .nav-list {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease-in-out;
+            }
+            
+            .main-nav.active .nav-list {
+                max-height: 300px;
+            }
+            
+            .mobile-nav-toggle {
+                display: block;
+            }
+            
+            .nav-list li {
+                width: 100%;
+            }
+            
+            .nav-list li a {
+                display: block;
+                padding: 0.75rem 1rem;
+            }
         }
         
         .container {
@@ -575,6 +669,63 @@
             z-index: 5;
         }
         
+        /* Footer Styles */
+        .site-footer {
+            background-color: #1d1d1f;
+            color: #f5f5f7;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .footer-legal {
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2rem;
+            padding: 0;
+        }
+        
+        .footer-links li a {
+            color: #f5f5f7;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: var(--transition-normal);
+        }
+        
+        .footer-links li a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 1.5rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        @media (max-width: 768px) {
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .site-footer {
+                padding: 1.5rem 0;
+            }
+        }
+        
         .loading-spinner {
             width: 50px;
             height: 50px;
@@ -590,11 +741,38 @@
         }
     </style>
 </head>
-<body>
+<body id="top">
     <header>
-        <h1 class="site-title">Game Hub</h1>
-        <div class="subtitle">A Collection of Exciting HTML5 Games</div>
+        <div class="header-left">
+            <h1 class="site-title">Game Hub</h1>
+            <button class="mobile-nav-toggle" aria-label="Toggle navigation menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        
+        <nav class="main-nav">
+            <ul class="nav-list">
+                <li><a href="#top" data-section="top" class="active">Home</a></li>
+                <li><a href="#featured-games" data-section="featured-games">Featured Games</a></li>
+                <li><a href="#puzzle-games" data-section="puzzle-games">Puzzle Games</a></li>
+                <li><a href="#casual-games" data-section="casual-games">Casual Games</a></li>
+            </ul>
+        </nav>
     </header>
+    
+    <!-- 面包屑导航 -->
+    <nav class="breadcrumb-container" aria-label="breadcrumb">
+        <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+            <li class="breadcrumb-item active" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                <span itemprop="name">Home</span>
+                <meta itemprop="position" content="1" />
+            </li>
+        </ol>
+    </nav>
     
     <main class="container main-content">
         <section class="section" id="featured-games">
@@ -730,21 +908,34 @@
     <!-- Game modal -->
     <div id="gameModal" class="game-modal">
         <div class="game-modal-content">
-            <span class="close-button" onclick="closeGameModal()">&times;</span>
-            <h2 id="gameModalTitle" class="game-modal-title"></h2>
-            <p id="gameModalDescription" class="game-modal-description"></p>
-            <div class="game-container">
-                <iframe id="gameIframe" class="game-iframe" frameborder="0" allowfullscreen></iframe>
-                <div id="gameLoading" class="game-loading">
-                    <div class="loading-spinner"></div>
-                    <p>Loading game...</p>
-                </div>
-                <button id="fullscreenButton" class="fullscreen-button">
+            <div class="game-modal-header">
+                <h2 id="gameModalTitle">Game Title</h2>
+                <button onclick="closeGameModal()" class="close-button">×</button>
+            </div>
+            <div id="gameLoading" class="game-loading-screen">
+                <div class="loader"></div>
+                <p>Loading Game...</p>
+            </div>
+            <iframe id="gameIframe" class="game-iframe" allowfullscreen sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+            <div class="game-modal-controls">
+                <button id="fullscreenButton" class="control-button">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
                     </svg>
                     全屏
                 </button>
+                <button id="refreshButton" onclick="refreshGame()" class="control-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 4v6h-6"></path>
+                        <path d="M1 20v-6h6"></path>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"></path>
+                        <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"></path>
+                    </svg>
+                    重新加载
+                </button>
+            </div>
+            <div id="mobileGameControls" class="mobile-controls">
+                <!-- Mobile control buttons will be added here dynamically -->
             </div>
         </div>
     </div>
@@ -756,434 +947,104 @@
         <button id="mobileRightButton" class="mobile-control-button">→</button>
     </div>
     
-    <footer>
-        <p>&copy; 2025 Game Hub | All games are for entertainment purposes only</p>
+    <!-- 页脚 -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-legal">
+                <ul class="footer-links">
+                    <li><a href="privacy-policy.html" data-exists="true">Privacy Policy</a></li>
+                    <li><a href="terms-of-service.html" data-exists="true">Terms of Service</a></li>
+                    <li><a href="cookie-policy.html" data-exists="true">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; <span id="current-year">2023</span> Game Hub. All rights reserved.</p>
+            <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
+        </div>
+        
+        <!-- Structured Data -->
+        <div class="structured-data" itemscope itemtype="https://schema.org/WebSite">
+            <meta itemprop="name" content="Game Hub">
+            <meta itemprop="url" content="https://gamehub.example.com">
+            <div itemprop="potentialAction" itemscope itemtype="https://schema.org/SearchAction">
+                <meta itemprop="target" content="https://gamehub.example.com/search?q={search_term_string}">
+                <meta itemprop="query-input" name="search_term_string">
+            </div>
+        </div>
     </footer>
     
+    <!-- SEO组件JS -->
+    <script src="js/seo-components.js"></script>
+    
+    <!-- Add JavaScript for mobile navigation toggle -->
     <script>
-        // Helper function: Handle GameDistribution game URL
-        function getGameDistributionUrl(gameId, gameName) {
-            // Get current website domain - 使用动态获取域名
-            var domain = window.location.hostname;
-            // If in local development environment, use a fixed domain
-            if (domain === 'localhost' || domain === '127.0.0.1' || domain === '') {
-                domain = 'yourgamesite.com'; // Replace with your actual domain
-            }
-            
-            // If no game name provided, use a default value
-            gameName = gameName || 'game';
-            
-            // Use new URL format
-            return 'https://html5.gamedistribution.com/' + gameId + '/?utm_source=' + domain + '&utm_medium=' + gameName + '&utm_campaign=block-and-redirect';
-        }
-        
-        // 检测设备类型
-        function isMobileDevice() {
-            return (window.innerWidth <= 768) || 
-                   ('ontouchstart' in window) || 
-                   (navigator.maxTouchPoints > 0) || 
-                   (navigator.msMaxTouchPoints > 0);
-        }
-        
-        // 检测设备方向
-        function isLandscapeMode() {
-            return window.innerWidth > window.innerHeight;
-        }
-        
-        // Open game modal - 修改以处理跨域问题
-        function openGameModal(title, description, gameUrl) {
-            document.getElementById('gameModalTitle').textContent = title;
-            document.getElementById('gameModalDescription').textContent = description;
-            
-            // 显示加载指示器
-            var gameLoading = document.getElementById('gameLoading');
-            gameLoading.style.display = 'flex';
-            
-            // 添加安全属性到iframe
-            var gameIframe = document.getElementById('gameIframe');
-            gameIframe.src = gameUrl;
-            gameIframe.title = title;
-            gameIframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-            
-            // 根据URL类型设置不同的sandbox属性
-            if (gameUrl.includes('onlinegames.io')) {
-                // onlinegames.io需要更多权限
-                gameIframe.removeAttribute('sandbox'); // 移除所有沙箱限制
-            } else if (gameUrl.startsWith('http')) {
-                // 其他外部URL使用较少限制的sandbox
-                gameIframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms allow-modals allow-orientation-lock');
-            } else {
-                // 本地游戏
-                gameIframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms');
-            }
-            
-            // 监听iframe加载完成事件
-            gameIframe.onload = function() {
-                gameLoading.style.display = 'none';
-            };
-            
-            // 处理加载错误
-            gameIframe.onerror = function() {
-                console.error('游戏加载失败:', gameUrl);
-                gameLoading.innerHTML = `
-                    <div style="text-align: center; padding: 20px;">
-                        <p>游戏加载失败</p>
-                        <p>可能原因：</p>
-                        <ul style="text-align: left; display: inline-block;">
-                            <li>网络连接问题</li>
-                            <li>游戏源站点限制</li>
-                            <li>浏览器安全设置</li>
-                        </ul>
-                        <button onclick="retryLoadGame('${gameUrl}')" style="margin-top: 15px; padding: 8px 16px; background: #0071e3; color: white; border: none; border-radius: 20px; cursor: pointer;">重试</button>
-                        <button onclick="closeGameModal()" style="margin-top: 15px; margin-left: 10px; padding: 8px 16px; background: #666; color: white; border: none; border-radius: 20px; cursor: pointer;">关闭</button>
-                    </div>
-                `;
-            };
-            
-            // 添加超时处理
-            var loadTimeout = setTimeout(function() {
-                if (gameLoading.style.display !== 'none') {
-                    console.warn('游戏加载超时:', gameUrl);
-                    gameLoading.innerHTML += '<p>加载时间较长，请耐心等待...</p>';
-                }
-            }, 8000);
-            
-            // Show modal with animation
-            var modal = document.getElementById('gameModal');
-            modal.style.display = 'block';
-            setTimeout(function() {
-                modal.classList.add('active');
-            }, 10);
-            
-            // 移动端优化
-            if (isMobileDevice()) {
-                // 检查是否为飞机大战游戏
-                if (title === '飞机大战') {
-                    document.getElementById('mobileGameControls').style.display = 'flex';
-                }
-                
-                // 如果是横屏模式，自动进入全屏
-                if (isLandscapeMode()) {
-                    setTimeout(function() {
-                        toggleFullscreen(gameIframe);
-                    }, 1000);
-                }
-            }
-            
-            // Add fullscreen button functionality
-            var fullscreenButton = document.getElementById('fullscreenButton');
-            fullscreenButton.onclick = function() {
-                toggleFullscreen(gameIframe);
-            };
-            
-            // 更新按钮文本
-            fullscreenButton.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-                </svg>
-                ${isMobileDevice() ? '全屏' : '全屏'}
-            `;
-            
-            // Prevent page scrolling
-            document.body.style.overflow = 'hidden';
-            
-            // Track game play for analytics
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'game_play', {
-                    'event_category': 'Games',
-                    'event_label': title
-                });
-            }
-        }
-        
-        // Toggle fullscreen mode
-        function toggleFullscreen(element) {
-            if (!document.fullscreenElement &&    // Standard method
-                !document.mozFullScreenElement && // Firefox
-                !document.webkitFullscreenElement && // Chrome, Safari and Opera
-                !document.msFullscreenElement) {  // IE/Edge
-                
-                // 移动端优化：在移动设备上，全屏时隐藏标题和描述
-                if (isMobileDevice()) {
-                    document.getElementById('gameModal').classList.add('fullscreen');
-                }
-                
-                // Request fullscreen
-                if (element.requestFullscreen) {
-                    element.requestFullscreen();
-                } else if (element.mozRequestFullScreen) {
-                    element.mozRequestFullScreen();
-                } else if (element.webkitRequestFullscreen) {
-                    element.webkitRequestFullscreen();
-                } else if (element.msRequestFullscreen) {
-                    element.msRequestFullscreen();
-                }
-            } else {
-                // 退出全屏时恢复标题和描述
-                document.getElementById('gameModal').classList.remove('fullscreen');
-                
-                // Exit fullscreen
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-            }
-        }
-        
-        // Close game modal
-        function closeGameModal() {
-            // 隐藏移动端控制
-            document.getElementById('mobileGameControls').style.display = 'none';
-            
-            // Remove active class first for animation
-            var modal = document.getElementById('gameModal');
-            modal.classList.remove('active');
-            modal.classList.remove('fullscreen');
-            
-            // Hide modal after animation
-            setTimeout(function() {
-                modal.style.display = 'none';
-                
-                // Get iframe element
-                var iframe = document.getElementById('gameIframe');
-                if (iframe) {
-                    // Clear iframe src attribute
-                    iframe.src = '';
-                }
-                
-                // Restore page scrolling
-                document.body.style.overflow = 'auto';
-            }, 300);
-        }
-        
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            var modal = document.getElementById('gameModal');
-            if (event.target == modal) {
-                closeGameModal();
-            }
-        }
-        
-        // Close modal with ESC key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeGameModal();
-            }
-        });
-        
-        // 处理移动端方向变化
-        window.addEventListener('orientationchange', function() {
-            // 如果游戏模态框已打开
-            var modal = document.getElementById('gameModal');
-            if (modal.style.display === 'block') {
-                // 如果切换到横屏，自动进入全屏
-                if (isLandscapeMode()) {
-                    var gameIframe = document.getElementById('gameIframe');
-                    setTimeout(function() {
-                        toggleFullscreen(gameIframe);
-                    }, 500);
-                }
-            }
-        });
-        
-        // 移动端游戏控制
         document.addEventListener('DOMContentLoaded', function() {
-            // 飞机大战移动端控制
-            var mobileLeftButton = document.getElementById('mobileLeftButton');
-            var mobileRightButton = document.getElementById('mobileRightButton');
-            var mobileFireButton = document.getElementById('mobileFireButton');
+            // Mobile navigation toggle
+            const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+            const mainNav = document.querySelector('.main-nav');
             
-            // 模拟键盘事件
-            function simulateKeyEvent(keyCode, type) {
-                var event = new KeyboardEvent(type, {
-                    bubbles: true,
-                    cancelable: true,
-                    keyCode: keyCode
+            if(mobileNavToggle && mainNav) {
+                mobileNavToggle.addEventListener('click', function() {
+                    mainNav.classList.toggle('active');
                 });
-                document.dispatchEvent(event);
             }
             
-            // 左按钮
-            mobileLeftButton.addEventListener('touchstart', function() {
-                simulateKeyEvent(37, 'keydown'); // 左箭头键
-            });
-            mobileLeftButton.addEventListener('touchend', function() {
-                simulateKeyEvent(37, 'keyup');
-            });
+            // 处理导航项的选中状态
+            const navLinks = document.querySelectorAll('.nav-list a');
             
-            // 右按钮
-            mobileRightButton.addEventListener('touchstart', function() {
-                simulateKeyEvent(39, 'keydown'); // 右箭头键
-            });
-            mobileRightButton.addEventListener('touchend', function() {
-                simulateKeyEvent(39, 'keyup');
-            });
-            
-            // 发射按钮
-            mobileFireButton.addEventListener('touchstart', function() {
-                simulateKeyEvent(32, 'keydown'); // 空格键
-            });
-            mobileFireButton.addEventListener('touchend', function() {
-                simulateKeyEvent(32, 'keyup');
-            });
-            
-            // Initialize page
-            document.addEventListener('DOMContentLoaded', function() {
-                // Add structured data for SEO
-                var structuredData = {
-                    "@context": "https://schema.org",
-                    "@type": "WebSite",
-                    "name": "Game Hub",
-                    "url": "https://yourgamesite.com",
-                    "description": "A collection of free HTML5 games to play online",
-                    "potentialAction": {
-                        "@type": "SearchAction",
-                        "target": "https://yourgamesite.com/search?q={search_term_string}",
-                        "query-input": "required name=search_term_string"
+            // 点击导航链接时更新激活状态
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // 移除所有导航项的active类
+                    navLinks.forEach(item => item.classList.remove('active'));
+                    
+                    // 为当前点击的项添加active类
+                    this.classList.add('active');
+                    
+                    // 如果点击的是Home，带用户回到顶部
+                    if(this.getAttribute('data-section') === 'top') {
+                        window.scrollTo({top: 0, behavior: 'smooth'});
                     }
-                };
+                    
+                    // 如果是移动设备，点击后关闭菜单
+                    if(window.innerWidth <= 768) {
+                        mainNav.classList.remove('active');
+                    }
+                });
+            });
+            
+            // 监听滚动事件，根据当前视图位置自动更新导航激活状态
+            window.addEventListener('scroll', function() {
+                const scrollPosition = window.scrollY;
                 
-                var script = document.createElement('script');
-                script.type = 'application/ld+json';
-                script.text = JSON.stringify(structuredData);
-                document.head.appendChild(script);
+                // 获取所有section元素
+                const sections = document.querySelectorAll('section');
                 
-                // Add game schema for each game
-                var gameStructuredData = {
-                    "@context": "https://schema.org",
-                    "@type": "ItemList",
-                    "itemListElement": [
-                        {
-                            "@type": "ListItem",
-                            "position": 1,
-                            "item": {
-                                "@type": "Game",
-                                "name": "Snake",
-                                "description": "The classic Snake game. Control the snake with arrow keys, eat food to increase your length and score."
-                            }
-                        },
-                        {
-                            "@type": "ListItem",
-                            "position": 2,
-                            "item": {
-                                "@type": "Game",
-                                "name": "Air Combat",
-                                "description": "A classic shoot 'em up game. Control your aircraft to dodge enemies, collect power-ups, and aim for the highest score possible!"
-                            }
-                        },
-                        {
-                            "@type": "ListItem",
-                            "position": 3,
-                            "item": {
-                                "@type": "Game",
-                                "name": "Minesweeper",
-                                "description": "The classic Minesweeper puzzle game. Test your logical thinking, mark all mines, and clear the board as quickly as possible without triggering any explosions!"
-                            }
-                        },
-                        {
-                            "@type": "ListItem",
-                            "position": 4,
-                            "item": {
-                                "@type": "Game",
-                                "name": "Monster Survivors",
-                                "description": "Fight monsters in this exciting survival game. Collect resources and survive as long as possible."
-                            }
-                        },
-                        {
-                            "@type": "ListItem",
-                            "position": 5,
-                            "item": {
-                                "@type": "Game",
-                                "name": "Stickman GTA City",
-                                "description": "Explore an open-world city as a stickman character. Complete missions, drive vehicles, and cause mayhem in this action-packed game."
-                            }
-                        },
-                        {
-                            "@type": "ListItem",
-                            "position": 6,
-                            "item": {
-                                "@type": "Game",
-                                "name": "Adventure Journey",
-                                "description": "An exciting adventure game. Explore unknown worlds, collect treasures, and defeat enemies."
-                            }
-                        },
-                        {
-                            "@type": "ListItem",
-                            "position": 7,
-                            "item": {
-                                "@type": "Game",
-                                "name": "Real Flight Simulator",
-                                "description": "Experience realistic flight simulation with multiple aircraft options. Control planes, reach new heights and explore the skies."
-                            }
-                        },
-                        {
-                            "@type": "ListItem",
-                            "position": 8,
-                            "item": {
-                                "@type": "Game",
-                                "name": "Capybara Clicker Pro",
-                                "description": "Tap on the adorable Capybara to collect coins. Unlock boosters and cute characters as you progress in this addictive idle clicker game."
-                            }
-                        },
-                        {
-                            "@type": "ListItem",
-                            "position": 9,
-                            "item": {
-                                "@type": "Game",
-                                "name": "Idle Dev Startup",
-                                "description": "Build your own software development company from scratch. Hire employees, develop apps, and grow your business in this idle management game."
-                            }
-                        }
-                    ]
-                };
+                // 检查哪个section在视图中
+                let currentSection = 'top';
                 
-                var gameScript = document.createElement('script');
-                gameScript.type = 'application/ld+json';
-                gameScript.text = JSON.stringify(gameStructuredData);
-                document.head.appendChild(gameScript);
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    const sectionHeight = section.offsetHeight;
+                    
+                    if(scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                        currentSection = section.id;
+                    }
+                });
+                
+                // 更新导航项的激活状态
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if(link.getAttribute('data-section') === currentSection) {
+                        link.classList.add('active');
+                    } else if(scrollPosition < 100 && link.getAttribute('data-section') === 'top') {
+                        link.classList.add('active');
+                    }
+                });
             });
         });
-        
-        // 重试加载游戏
-        function retryLoadGame(gameUrl) {
-            var gameIframe = document.getElementById('gameIframe');
-            var gameLoading = document.getElementById('gameLoading');
-            
-            // 重置加载状态
-            gameLoading.innerHTML = `
-                <div class="loading-spinner"></div>
-                <p>正在重新加载游戏...</p>
-            `;
-            gameLoading.style.display = 'flex';
-            
-            // 重新加载iframe
-            gameIframe.src = '';
-            setTimeout(function() {
-                gameIframe.src = gameUrl;
-            }, 500);
-        }
-        
-        // 百度统计事件跟踪
-        function trackGameClick(gameTitle) {
-            // 百度统计
-            if (window._hmt) {
-                _hmt.push(['_trackEvent', '游戏', '点击', gameTitle]);
-            }
-            
-            // 谷歌统计
-            if (window.gtag) {
-                gtag('event', 'game_click', {
-                    'event_category': '游戏',
-                    'event_label': gameTitle,
-                    'value': 1
-                });
-            }
-        }
     </script>
 </body>
 </html> 

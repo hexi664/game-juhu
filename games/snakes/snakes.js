@@ -1,6 +1,6 @@
-// 贪吃蛇游戏实现
+// Snake Game Implementation
 var Snakes = function() {
-    // 游戏配置
+    // Game configuration
     var config = {
         canvasId: 'game-canvas',
         width: 400,
@@ -12,7 +12,7 @@ var Snakes = function() {
         foodColor: 'red'
     };
 
-    // 游戏状态
+    // Game state
     var state = {
         canvas: null,
         context: null,
@@ -31,220 +31,290 @@ var Snakes = function() {
         score: 0,
         highScore: 0,
         gameOver: false,
-        count: 0
+        count: 0,
+        initialized: false
     };
 
-    // 初始化游戏
+    // Initialize game
     function init() {
         try {
-            console.log("初始化游戏...");
+            console.log("Initializing game...");
             
-            // 检查游戏容器是否存在
-            var gameContainer = document.getElementById('game');
-            if (!gameContainer) {
-                console.error("找不到ID为'game'的元素！");
-                alert("游戏初始化失败：找不到游戏容器元素");
-                return;
+            // Get canvas that should already be created in the HTML
+            state.canvas = document.getElementById(config.canvasId);
+            if (!state.canvas) {
+                console.error("Could not find canvas with ID:", config.canvasId);
+                return false;
             }
             
-            // 创建画布
-            if (!document.getElementById(config.canvasId)) {
-                console.log("创建新的画布元素...");
-                state.canvas = document.createElement('canvas');
-                state.canvas.id = config.canvasId;
-                state.canvas.width = config.width;
-                state.canvas.height = config.height;
-                state.canvas.className = 'game-canvas';
-                gameContainer.appendChild(state.canvas);
-            } else {
-                console.log("使用现有的画布元素...");
-                state.canvas = document.getElementById(config.canvasId);
-            }
-            
+            // Get context
             state.context = state.canvas.getContext('2d');
-            
-            // 加载高分
-            if (localStorage.getItem('snakeHighScore')) {
-                state.highScore = parseInt(localStorage.getItem('snakeHighScore'));
-                console.log("加载最高分: " + state.highScore);
+            if (!state.context) {
+                console.error("Could not get canvas context!");
+                return false;
             }
             
-            // 创建分数显示
-            createScoreDisplay();
+            // Load high score from local storage
+            var savedHighScore = localStorage.getItem('snakeHighScore');
+            if (savedHighScore) {
+                state.highScore = parseInt(savedHighScore);
+                // Score display should already be created in HTML
+                updateScoreDisplay();
+            }
             
-            // 添加键盘事件监听
+            // Set up event listeners
             document.addEventListener('keydown', handleKeyDown);
             
-            // 开始游戏循环
-            console.log("开始游戏循环...");
-            requestAnimationFrame(gameLoop);
-        } catch (error) {
-            console.error("游戏初始化错误:", error);
-            alert("游戏初始化失败: " + error.message);
-        }
-    }
-    
-    // 创建分数显示
-    function createScoreDisplay() {
-        try {
-            var gameContainer = document.getElementById('game');
-            if (!gameContainer) {
-                console.error("创建分数显示失败：找不到游戏容器");
-                return;
-            }
+            // Reset game state
+            resetGame();
             
-            var scoreDiv = document.createElement('div');
-            scoreDiv.className = 'score-display';
-            scoreDiv.innerHTML = '<p>分数: <span id="score">0</span> | 最高分: <span id="high-score">' + state.highScore + '</span></p>';
-            gameContainer.appendChild(scoreDiv);
-            console.log("分数显示创建成功");
+            // Mark as initialized
+            state.initialized = true;
+            
+            // Initial draw to show the game immediately
+            drawInitialState();
+            
+            // Start game loop
+            requestAnimationFrame(gameLoop);
+            
+            console.log("Game initialized successfully");
+            return true;
         } catch (error) {
-            console.error("创建分数显示错误:", error);
+            console.error("Error initializing game:", error);
+            return false;
         }
     }
     
-    // 获取随机整数
+    // Initial draw to show the game immediately
+    function drawInitialState() {
+        // Clear and draw background
+        state.context.fillStyle = config.backgroundColor;
+        state.context.fillRect(0, 0, state.canvas.width, state.canvas.height);
+        
+        // Draw food
+        state.context.fillStyle = config.foodColor;
+        state.context.fillRect(state.food.x, state.food.y, config.gridSize, config.gridSize);
+        
+        // Draw snake
+        state.context.fillStyle = config.snakeColor;
+        state.snake.cells.forEach(function(cell) {
+            state.context.fillRect(cell.x, cell.y, config.gridSize - 1, config.gridSize - 1);
+        });
+    }
+    
+    // Update score display
+    function updateScoreDisplay() {
+        var currentScoreElem = document.getElementById('current-score');
+        var highScoreElem = document.getElementById('high-score');
+        
+        if (currentScoreElem) {
+            currentScoreElem.textContent = 'Score: ' + state.score;
+        }
+        
+        if (highScoreElem) {
+            highScoreElem.textContent = 'High Score: ' + state.highScore;
+        }
+    }
+    
+    // Get random integer between min and max
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
     }
     
-    // 游戏循环
+    // Game loop
     function gameLoop() {
-        try {
-            requestAnimationFrame(gameLoop);
-            
-            // 控制游戏速度
-            if (++state.count < config.speed) {
-                return;
-            }
-            
-            state.count = 0;
-            state.context.clearRect(0, 0, state.canvas.width, state.canvas.height);
-            
-            // 移动蛇
-            state.snake.x += state.snake.dx;
-            state.snake.y += state.snake.dy;
-            
-            // 边界处理 - 穿墙
-            if (state.snake.x < 0) {
-                state.snake.x = state.canvas.width - config.gridSize;
-            } else if (state.snake.x >= state.canvas.width) {
-                state.snake.x = 0;
-            }
-            
-            if (state.snake.y < 0) {
-                state.snake.y = state.canvas.height - config.gridSize;
-            } else if (state.snake.y >= state.canvas.height) {
-                state.snake.y = 0;
-            }
-            
-            // 记录蛇的位置
-            state.snake.cells.unshift({x: state.snake.x, y: state.snake.y});
-            
-            // 移除多余的蛇身
-            if (state.snake.cells.length > state.snake.maxCells) {
-                state.snake.cells.pop();
-            }
-            
-            // 绘制食物
-            state.context.fillStyle = config.foodColor;
-            state.context.fillRect(state.food.x, state.food.y, config.gridSize-1, config.gridSize-1);
-            
-            // 绘制蛇
-            state.context.fillStyle = config.snakeColor;
-            state.snake.cells.forEach(function(cell, index) {
-                state.context.fillRect(cell.x, cell.y, config.gridSize-1, config.gridSize-1);
-                
-                // 检测是否吃到食物
-                if (cell.x === state.food.x && cell.y === state.food.y) {
-                    state.snake.maxCells++;
-                    state.score++;
-                    
-                    var scoreElement = document.getElementById('score');
-                    if (scoreElement) {
-                        scoreElement.textContent = state.score;
-                    }
-                    
-                    // 更新最高分
-                    if (state.score > state.highScore) {
-                        state.highScore = state.score;
-                        localStorage.setItem('snakeHighScore', state.highScore);
-                        
-                        var highScoreElement = document.getElementById('high-score');
-                        if (highScoreElement) {
-                            highScoreElement.textContent = state.highScore;
-                        }
-                    }
-                    
-                    // 生成新的食物
-                    state.food.x = getRandomInt(0, state.canvas.width / config.gridSize) * config.gridSize;
-                    state.food.y = getRandomInt(0, state.canvas.height / config.gridSize) * config.gridSize;
-                }
-                
-                // 检测是否碰到自己
-                for (var i = index + 1; i < state.snake.cells.length; i++) {
-                    if (cell.x === state.snake.cells[i].x && cell.y === state.snake.cells[i].y) {
-                        // 游戏结束，重置游戏
-                        resetGame();
-                    }
-                }
-            });
-        } catch (error) {
-            console.error("游戏循环错误:", error);
+        // Only continue if game is initialized
+        if (!state.initialized) {
+            console.warn("Game loop called but game is not initialized");
+            return;
         }
+        
+        if (state.gameOver) {
+            // Show game over message
+            state.context.fillStyle = 'rgba(0, 0, 0, 0.75)';
+            state.context.fillRect(0, 0, state.canvas.width, state.canvas.height);
+            
+            state.context.font = '30px Arial';
+            state.context.fillStyle = 'white';
+            state.context.textAlign = 'center';
+            state.context.fillText('GAME OVER', state.canvas.width / 2, state.canvas.height / 2 - 30);
+            
+            state.context.font = '20px Arial';
+            state.context.fillText('Score: ' + state.score, state.canvas.width / 2, state.canvas.height / 2 + 10);
+            
+            state.context.font = '16px Arial';
+            state.context.fillText('Press Space to Play Again', state.canvas.width / 2, state.canvas.height / 2 + 50);
+            
+            return;
+        }
+        
+        requestAnimationFrame(gameLoop);
+        
+        // Slow down the game loop
+        if (++state.count < config.speed) {
+            return;
+        }
+        
+        state.count = 0;
+        state.context.clearRect(0, 0, state.canvas.width, state.canvas.height);
+        
+        // Draw background
+        state.context.fillStyle = config.backgroundColor;
+        state.context.fillRect(0, 0, state.canvas.width, state.canvas.height);
+        
+        // Move snake
+        state.snake.x += state.snake.dx;
+        state.snake.y += state.snake.dy;
+        
+        // Wrap snake position if it goes off screen
+        if (state.snake.x < 0) {
+            state.snake.x = state.canvas.width - config.gridSize;
+        } else if (state.snake.x >= state.canvas.width) {
+            state.snake.x = 0;
+        }
+        
+        if (state.snake.y < 0) {
+            state.snake.y = state.canvas.height - config.gridSize;
+        } else if (state.snake.y >= state.canvas.height) {
+            state.snake.y = 0;
+        }
+        
+        // Keep track of where snake has been
+        state.snake.cells.unshift({x: state.snake.x, y: state.snake.y});
+        
+        // Remove tail
+        if (state.snake.cells.length > state.snake.maxCells) {
+            state.snake.cells.pop();
+        }
+        
+        // Draw food
+        state.context.fillStyle = config.foodColor;
+        state.context.fillRect(state.food.x, state.food.y, config.gridSize, config.gridSize);
+        
+        // Draw snake
+        state.context.fillStyle = config.snakeColor;
+        state.snake.cells.forEach(function(cell, index) {
+            state.context.fillRect(cell.x, cell.y, config.gridSize - 1, config.gridSize - 1);
+            
+            // Snake ate food
+            if (cell.x === state.food.x && cell.y === state.food.y) {
+                state.snake.maxCells++;
+                state.score++;
+                
+                // Update high score
+                if (state.score > state.highScore) {
+                    state.highScore = state.score;
+                    localStorage.setItem('snakeHighScore', state.highScore);
+                }
+                
+                updateScoreDisplay();
+                
+                // Place new food
+                state.food.x = getRandomInt(0, Math.floor(state.canvas.width / config.gridSize)) * config.gridSize;
+                state.food.y = getRandomInt(0, Math.floor(state.canvas.height / config.gridSize)) * config.gridSize;
+            }
+            
+            // Check for collision with own body
+            for (var i = index + 1; i < state.snake.cells.length; i++) {
+                if (cell.x === state.snake.cells[i].x && cell.y === state.snake.cells[i].y) {
+                    state.gameOver = true;
+                }
+            }
+        });
     }
     
-    // 处理键盘事件
+    // Handle keyboard input
     function handleKeyDown(e) {
-        // 左箭头键
-        if (e.which === 37 && state.snake.dx === 0) {
+        // Prevent arrow keys from scrolling the page
+        if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+            e.preventDefault();
+        }
+        
+        if (state.gameOver) {
+            // Space to restart game
+            if (e.keyCode === 32) {
+                resetGame();
+            }
+            return;
+        }
+        
+        // Left arrow key
+        if (e.keyCode === 37 && state.snake.dx === 0) {
             state.snake.dx = -config.gridSize;
             state.snake.dy = 0;
         }
-        // 上箭头键
-        else if (e.which === 38 && state.snake.dy === 0) {
+        // Up arrow key
+        else if (e.keyCode === 38 && state.snake.dy === 0) {
             state.snake.dy = -config.gridSize;
             state.snake.dx = 0;
         }
-        // 右箭头键
-        else if (e.which === 39 && state.snake.dx === 0) {
+        // Right arrow key
+        else if (e.keyCode === 39 && state.snake.dx === 0) {
             state.snake.dx = config.gridSize;
             state.snake.dy = 0;
         }
-        // 下箭头键
-        else if (e.which === 40 && state.snake.dy === 0) {
+        // Down arrow key
+        else if (e.keyCode === 40 && state.snake.dy === 0) {
             state.snake.dy = config.gridSize;
             state.snake.dx = 0;
         }
     }
     
-    // 重置游戏
+    // Reset game state
     function resetGame() {
         state.snake.x = 160;
         state.snake.y = 160;
-        state.snake.cells = [];
+        state.snake.cells = []; // Clear existing cells array
         state.snake.maxCells = 4;
         state.snake.dx = config.gridSize;
         state.snake.dy = 0;
+        state.food.x = getRandomInt(0, Math.floor(state.canvas.width / config.gridSize)) * config.gridSize;
+        state.food.y = getRandomInt(0, Math.floor(state.canvas.height / config.gridSize)) * config.gridSize;
         state.score = 0;
+        state.gameOver = false;
         
-        var scoreElement = document.getElementById('score');
-        if (scoreElement) {
-            scoreElement.textContent = state.score;
+        // Initialize snake cells after reset
+        for (var i = 0; i < state.snake.maxCells; i++) {
+            state.snake.cells.push({
+                x: state.snake.x - (i * config.gridSize),
+                y: state.snake.y
+            });
         }
         
-        // 重新生成食物
-        state.food.x = getRandomInt(0, state.canvas.width / config.gridSize) * config.gridSize;
-        state.food.y = getRandomInt(0, state.canvas.height / config.gridSize) * config.gridSize;
+        updateScoreDisplay();
+        
+        // If canvas context exists, redraw the initial state
+        if (state.context) {
+            // Clear and draw background
+            state.context.fillStyle = config.backgroundColor;
+            state.context.fillRect(0, 0, state.canvas.width, state.canvas.height);
+            
+            // Draw food
+            state.context.fillStyle = config.foodColor;
+            state.context.fillRect(state.food.x, state.food.y, config.gridSize, config.gridSize);
+            
+            // Draw snake
+            state.context.fillStyle = config.snakeColor;
+            state.snake.cells.forEach(function(cell) {
+                state.context.fillRect(cell.x, cell.y, config.gridSize - 1, config.gridSize - 1);
+            });
+        }
     }
     
-    // 初始化游戏
-    init();
+    // Initialize the game
+    var result = init();
     
-    // 返回游戏控制接口
+    // Return public interface
     return {
-        reset: resetGame,
-        getScore: function() { return state.score; },
-        getHighScore: function() { return state.highScore; }
+        isInitialized: function() {
+            return state.initialized;
+        },
+        resetGame: resetGame,
+        getScore: function() {
+            return state.score;
+        },
+        getHighScore: function() {
+            return state.highScore;
+        }
     };
 }; 

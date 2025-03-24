@@ -1,4 +1,4 @@
-// 游戏常量
+// Game constants
 const GAME_WIDTH = 400;
 const GAME_HEIGHT = 600;
 const PLAYER_WIDTH = 50;
@@ -9,7 +9,7 @@ const BULLET_WIDTH = 4;
 const BULLET_HEIGHT = 10;
 const POWERUP_SIZE = 30;
 
-// 游戏状态
+// Game state
 let canvas, ctx;
 let gameRunning = false;
 let score = 0;
@@ -19,7 +19,7 @@ let enemySpawnTimer = 0;
 let powerupSpawnTimer = 0;
 let backgroundY = 0;
 
-// 游戏对象
+// Game objects
 let player = {
     x: GAME_WIDTH / 2 - PLAYER_WIDTH / 2,
     y: GAME_HEIGHT - PLAYER_HEIGHT - 20,
@@ -37,27 +37,27 @@ let player = {
 let enemies = [];
 let powerups = [];
 
-// 键盘控制
+// Keyboard controls
 let keys = {
     ArrowLeft: false,
     ArrowRight: false,
     Space: false
 };
 
-// 初始化游戏
+// Initialize game
 function init() {
     canvas = document.getElementById('game-canvas');
     ctx = canvas.getContext('2d');
     
-    // 设置画布大小
+    // Set canvas size
     canvas.width = GAME_WIDTH;
     canvas.height = GAME_HEIGHT;
     
-    // 事件监听
+    // Event listeners
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
     
-    // 移动端控制
+    // Mobile controls
     document.getElementById('left-button').addEventListener('touchstart', () => keys.ArrowLeft = true);
     document.getElementById('left-button').addEventListener('touchend', () => keys.ArrowLeft = false);
     document.getElementById('right-button').addEventListener('touchstart', () => keys.ArrowRight = true);
@@ -65,16 +65,16 @@ function init() {
     document.getElementById('fire-button').addEventListener('touchstart', () => keys.Space = true);
     document.getElementById('fire-button').addEventListener('touchend', () => keys.Space = false);
     
-    // 开始按钮
+    // Start button
     document.getElementById('start-button').addEventListener('click', startGame);
     document.getElementById('restart-button').addEventListener('click', restartGame);
     
-    // 预渲染开始界面
+    // Pre-render start screen
     drawBackground();
     drawPlayer();
 }
 
-// 开始游戏
+// Start game
 function startGame() {
     document.getElementById('start-screen').style.display = 'none';
     gameRunning = true;
@@ -83,7 +83,7 @@ function startGame() {
     updateScoreDisplay();
     updateHealthDisplay();
     
-    // 重置游戏对象
+    // Reset game objects
     player.x = GAME_WIDTH / 2 - PLAYER_WIDTH / 2;
     player.y = GAME_HEIGHT - PLAYER_HEIGHT - 20;
     player.bullets = [];
@@ -93,34 +93,34 @@ function startGame() {
     enemies = [];
     powerups = [];
     
-    // 开始游戏循环
+    // Start game loop
     requestAnimationFrame(gameLoop);
 }
 
-// 重新开始游戏
+// Restart game
 function restartGame() {
     document.getElementById('game-over-screen').style.display = 'none';
     startGame();
 }
 
-// 游戏结束
+// Game over
 function gameOver() {
     gameRunning = false;
-    document.getElementById('final-score').textContent = `你的得分: ${score}`;
+    document.getElementById('final-score').textContent = `Your Score: ${score}`;
     document.getElementById('game-over-screen').style.display = 'flex';
 }
 
-// 游戏主循环
+// Main game loop
 function gameLoop(timestamp) {
     const deltaTime = timestamp - lastTime;
     lastTime = timestamp;
     
     if (!gameRunning) return;
     
-    // 清除画布
+    // Clear canvas
     ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
     
-    // 更新和绘制
+    // Update and draw
     drawBackground();
     updatePlayer(deltaTime);
     updateBullets(deltaTime);
@@ -128,13 +128,13 @@ function gameLoop(timestamp) {
     updatePowerups(deltaTime);
     checkCollisions();
     
-    // 继续循环
+    // Continue loop
     requestAnimationFrame(gameLoop);
 }
 
-// 更新玩家
+// Update player
 function updatePlayer(deltaTime) {
-    // 移动玩家
+    // Move player
     if (keys.ArrowLeft) {
         player.x -= player.speed;
     }
@@ -142,32 +142,32 @@ function updatePlayer(deltaTime) {
         player.x += player.speed;
     }
     
-    // 边界检查
+    // Boundary check
     if (player.x < 0) player.x = 0;
     if (player.x > GAME_WIDTH - player.width) player.x = GAME_WIDTH - player.width;
     
-    // 发射子弹
+    // Fire bullets
     if (keys.Space && Date.now() - player.lastFire > player.fireRate) {
         fireBullet();
         player.lastFire = Date.now();
     }
     
-    // 道具效果计时
+    // Powerup effect timer
     if (player.powerupActive) {
         player.powerupTimer -= deltaTime;
         if (player.powerupTimer <= 0) {
             player.powerupActive = false;
-            player.fireRate = 300; // 恢复正常射速
+            player.fireRate = 300; // Restore normal fire rate
         }
     }
     
-    // 绘制玩家
+    // Draw player
     drawPlayer();
 }
 
-// 发射子弹
+// Fire bullet
 function fireBullet() {
-    // 普通射击
+    // Normal shot
     player.bullets.push({
         x: player.x + player.width / 2 - BULLET_WIDTH / 2,
         y: player.y,
@@ -177,7 +177,7 @@ function fireBullet() {
         color: '#fff'
     });
     
-    // 如果有道具效果，发射三发子弹
+    // If powerup is active, fire three bullets
     if (player.powerupActive) {
         player.bullets.push({
             x: player.x + player.width / 2 - BULLET_WIDTH / 2 - 15,
@@ -199,31 +199,31 @@ function fireBullet() {
     }
 }
 
-// 更新子弹
+// Update bullets
 function updateBullets(deltaTime) {
     for (let i = player.bullets.length - 1; i >= 0; i--) {
         const bullet = player.bullets[i];
         
-        // 移动子弹
+        // Move bullet
         bullet.y -= bullet.speed;
         
-        // 移除超出屏幕的子弹
+        // Remove bullets that are off screen
         if (bullet.y + bullet.height < 0) {
             player.bullets.splice(i, 1);
             continue;
         }
         
-        // 绘制子弹
+        // Draw bullet
         ctx.fillStyle = bullet.color;
         ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
     }
 }
 
-// 更新敌人
+// Update enemies
 function updateEnemies(deltaTime) {
-    // 生成新敌人
+    // Generate new enemies
     enemySpawnTimer += deltaTime;
-    if (enemySpawnTimer > 1000) { // 每秒生成一个敌人
+    if (enemySpawnTimer > 1000) { // Generate one enemy per second
         spawnEnemy();
         enemySpawnTimer = 0;
     }
@@ -231,24 +231,24 @@ function updateEnemies(deltaTime) {
     for (let i = enemies.length - 1; i >= 0; i--) {
         const enemy = enemies[i];
         
-        // 移动敌人
+        // Move enemy
         enemy.y += enemy.speed;
         
-        // 移除超出屏幕的敌人
+        // Remove enemies that are off screen
         if (enemy.y > GAME_HEIGHT) {
             enemies.splice(i, 1);
             continue;
         }
         
-        // 绘制敌人
+        // Draw enemy
         drawEnemy(enemy);
     }
 }
 
-// 生成敌人
+// Spawn enemy
 function spawnEnemy() {
     const x = Math.random() * (GAME_WIDTH - ENEMY_WIDTH);
-    const speed = 2 + Math.random() * 2; // 随机速度
+    const speed = 2 + Math.random() * 2; // Random speed
     
     enemies.push({
         x: x,
@@ -260,11 +260,11 @@ function spawnEnemy() {
     });
 }
 
-// 更新道具
+// Update powerups
 function updatePowerups(deltaTime) {
-    // 生成新道具
+    // Generate new powerup
     powerupSpawnTimer += deltaTime;
-    if (powerupSpawnTimer > 10000) { // 每10秒生成一个道具
+    if (powerupSpawnTimer > 10000) { // Generate a powerup every 10 seconds
         spawnPowerup();
         powerupSpawnTimer = 0;
     }
@@ -272,21 +272,21 @@ function updatePowerups(deltaTime) {
     for (let i = powerups.length - 1; i >= 0; i--) {
         const powerup = powerups[i];
         
-        // 移动道具
+        // Move powerup
         powerup.y += powerup.speed;
         
-        // 移除超出屏幕的道具
+        // Remove powerups that are off screen
         if (powerup.y > GAME_HEIGHT) {
             powerups.splice(i, 1);
             continue;
         }
         
-        // 绘制道具
+        // Draw powerup
         drawPowerup(powerup);
     }
 }
 
-// 生成道具
+// Spawn powerup
 function spawnPowerup() {
     const x = Math.random() * (GAME_WIDTH - POWERUP_SIZE);
     const type = Math.random() < 0.5 ? 'fireRate' : 'health';
@@ -302,102 +302,99 @@ function spawnPowerup() {
     });
 }
 
-// 碰撞检测
+// Draw background
+function drawBackground() {
+    // Simple scrolling background
+    backgroundY = (backgroundY + 0.5) % 20;
+    
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+    
+    // Draw stars
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    for (let i = 0; i < 50; i++) {
+        const x = Math.sin(i * 487.5) * GAME_WIDTH / 2 + GAME_WIDTH / 2;
+        const y = (i * 10 + backgroundY) % GAME_HEIGHT;
+        const size = i % 3 + 1;
+        ctx.fillRect(x, y, size, size);
+    }
+}
+
+// Check for collisions
 function checkCollisions() {
-    // 子弹与敌人碰撞
+    // Check bullet-enemy collisions
     for (let i = player.bullets.length - 1; i >= 0; i--) {
         const bullet = player.bullets[i];
         
         for (let j = enemies.length - 1; j >= 0; j--) {
             const enemy = enemies[j];
             
-            if (isColliding(bullet, enemy)) {
-                // 移除子弹和敌人
+            if (collision(bullet, enemy)) {
+                // Remove bullet and enemy
                 player.bullets.splice(i, 1);
                 enemies.splice(j, 1);
                 
-                // 增加分数
+                // Increase score
                 score += 10;
                 updateScoreDisplay();
                 
+                // Break out of inner loop once collision is found
                 break;
             }
         }
     }
     
-    // 玩家与敌人碰撞
+    // Check player-enemy collisions
     for (let i = enemies.length - 1; i >= 0; i--) {
         const enemy = enemies[i];
         
-        if (isColliding(player, enemy)) {
-            // 移除敌人
+        if (collision(player, enemy)) {
+            // Remove enemy
             enemies.splice(i, 1);
             
-            // 减少生命值
+            // Reduce health
             health--;
             updateHealthDisplay();
             
-            // 检查游戏结束
+            // Check if game over
             if (health <= 0) {
                 gameOver();
-                return;
             }
         }
     }
     
-    // 玩家与道具碰撞
+    // Check player-powerup collisions
     for (let i = powerups.length - 1; i >= 0; i--) {
         const powerup = powerups[i];
         
-        if (isColliding(player, powerup)) {
-            // 应用道具效果
+        if (collision(player, powerup)) {
+            // Apply powerup effect
             if (powerup.type === 'fireRate') {
                 player.powerupActive = true;
-                player.powerupTimer = 5000; // 5秒道具效果
-                player.fireRate = 150; // 提高射速
-            } else if (powerup.type === 'health') {
-                health = Math.min(health + 1, 5); // 最多5点生命值
+                player.fireRate = 150; // Faster firing rate
+                player.powerupTimer = 5000; // 5 second powerup effect
+            } else {
+                health = Math.min(health + 1, 5); // Maximum 5 health points
                 updateHealthDisplay();
             }
             
-            // 移除道具
+            // Remove powerup
             powerups.splice(i, 1);
         }
     }
 }
 
-// 碰撞检测辅助函数
-function isColliding(rect1, rect2) {
-    return (
-        rect1.x < rect2.x + rect2.width &&
-        rect1.x + rect1.width > rect2.x &&
-        rect1.y < rect2.y + rect2.height &&
-        rect1.y + rect1.height > rect2.y
-    );
+// Collision detection helper
+function collision(rect1, rect2) {
+    return rect1.x < rect2.x + rect2.width &&
+           rect1.x + rect1.width > rect2.x &&
+           rect1.y < rect2.y + rect2.height &&
+           rect1.y + rect1.height > rect2.y;
 }
 
-// 绘制背景
-function drawBackground() {
-    // 移动背景
-    backgroundY = (backgroundY + 1) % GAME_HEIGHT;
-    
-    // 绘制星空背景
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-    
-    // 绘制星星
-    ctx.fillStyle = '#fff';
-    for (let i = 0; i < 50; i++) {
-        const x = Math.sin(i * 10) * GAME_WIDTH / 2 + GAME_WIDTH / 2;
-        const y = (i * 12 + backgroundY) % GAME_HEIGHT;
-        const size = Math.random() * 2 + 1;
-        ctx.fillRect(x, y, size, size);
-    }
-}
-
-// 绘制玩家
+// Draw player
 function drawPlayer() {
-    // 飞机主体
+    // Aircraft body
     ctx.fillStyle = player.color;
     ctx.beginPath();
     ctx.moveTo(player.x + player.width / 2, player.y);
@@ -406,15 +403,15 @@ function drawPlayer() {
     ctx.closePath();
     ctx.fill();
     
-    // 飞机机翼
+    // Aircraft wings
     ctx.fillStyle = '#0077ed';
     ctx.fillRect(player.x + 5, player.y + player.height - 20, player.width - 10, 10);
     
-    // 飞机引擎
+    // Aircraft engine
     ctx.fillStyle = '#ff9500';
     ctx.fillRect(player.x + player.width / 2 - 5, player.y + player.height, 10, 5);
     
-    // 道具效果指示
+    // Powerup effect indicator
     if (player.powerupActive) {
         ctx.strokeStyle = '#ffcc00';
         ctx.lineWidth = 2;
@@ -424,9 +421,9 @@ function drawPlayer() {
     }
 }
 
-// 绘制敌人
+// Draw enemy
 function drawEnemy(enemy) {
-    // 敌机主体
+    // Enemy aircraft body
     ctx.fillStyle = enemy.color;
     ctx.beginPath();
     ctx.moveTo(enemy.x + enemy.width / 2, enemy.y + enemy.height);
@@ -435,22 +432,22 @@ function drawEnemy(enemy) {
     ctx.closePath();
     ctx.fill();
     
-    // 敌机机翼
+    // Enemy aircraft wings
     ctx.fillStyle = '#ff6b58';
     ctx.fillRect(enemy.x + 5, enemy.y + 10, enemy.width - 10, 10);
 }
 
-// 绘制道具
+// Draw powerup
 function drawPowerup(powerup) {
     ctx.fillStyle = powerup.color;
     ctx.beginPath();
     ctx.arc(powerup.x + powerup.width / 2, powerup.y + powerup.height / 2, powerup.width / 2, 0, Math.PI * 2);
     ctx.fill();
     
-    // 道具图标
+    // Powerup icon
     ctx.fillStyle = '#fff';
     if (powerup.type === 'fireRate') {
-        // 绘制闪电图标
+        // Draw lightning icon
         ctx.beginPath();
         ctx.moveTo(powerup.x + powerup.width / 2, powerup.y + 8);
         ctx.lineTo(powerup.x + powerup.width / 2 - 5, powerup.y + powerup.height / 2);
@@ -461,23 +458,23 @@ function drawPowerup(powerup) {
         ctx.closePath();
         ctx.fill();
     } else {
-        // 绘制加号图标
+        // Draw plus icon
         ctx.fillRect(powerup.x + powerup.width / 2 - 8, powerup.y + powerup.height / 2 - 2, 16, 4);
         ctx.fillRect(powerup.x + powerup.width / 2 - 2, powerup.y + powerup.height / 2 - 8, 4, 16);
     }
 }
 
-// 更新分数显示
+// Update score display
 function updateScoreDisplay() {
-    document.getElementById('score-display').textContent = `分数: ${score}`;
+    document.getElementById('score-display').textContent = `Score: ${score}`;
 }
 
-// 更新生命值显示
+// Update health display
 function updateHealthDisplay() {
-    document.getElementById('health-display').textContent = `生命: ${health}`;
+    document.getElementById('health-display').textContent = `Health: ${health}`;
 }
 
-// 键盘事件处理
+// Keyboard event handlers
 function handleKeyDown(e) {
     if (e.code === 'ArrowLeft' || e.code === 'ArrowRight' || e.code === 'Space') {
         keys[e.code] = true;
@@ -492,5 +489,5 @@ function handleKeyUp(e) {
     }
 }
 
-// 初始化游戏
+// Initialize game
 window.addEventListener('load', init); 

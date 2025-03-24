@@ -1,0 +1,25 @@
+<!-- Breadcrumb Navigation -->
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+    <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="index.html" itemprop="item">
+                <span itemprop="name">Home</span>
+            </a>
+            <meta itemprop="position" content="1" />
+        </li>
+        
+        <!-- Second level to be dynamically replaced by JavaScript -->
+        <li class="breadcrumb-item breadcrumb-category" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="#" itemprop="item">
+                <span itemprop="name">Category</span>
+            </a>
+            <meta itemprop="position" content="2" />
+        </li>
+        
+        <!-- Current page to be dynamically replaced by JavaScript -->
+        <li class="breadcrumb-item active breadcrumb-current" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span itemprop="name">Current Page</span>
+            <meta itemprop="position" content="3" />
+        </li>
+    </ol>
+</nav> 
